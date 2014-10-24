@@ -1,4 +1,5 @@
 var pull = require('pull-core');
+var ready = require('./ready');
 var EOF = [];
 
 /**
@@ -11,7 +12,6 @@ var EOF = [];
 **/
 module.exports = pull.Source(function(socket) {
   var buffer = [];
-  var remove = socket && (socket.removeEventListener || socket.removeListener);
   var receiver;
 
   socket.addEventListener('message', function(evt) {
@@ -19,7 +19,7 @@ module.exports = pull.Source(function(socket) {
       return receiver(null, evt.data);
     }
 
-    buffer[buffer.length] = evt.data;
+    buffer.push(evt.data);
   });
 
   socket.addEventListener('close', function(evt) {
@@ -31,16 +31,6 @@ module.exports = pull.Source(function(socket) {
   });
 
   function read(end, cb) {
-
-    function handleOpen(evt) {
-      if (typeof remove == 'function') {
-        remove.call(socket, 'open', handleOpen);
-      }
-
-      read(end, cb);
-    }
-
-    // reset the receiver
     receiver = null;
 
     // if ended, abort
@@ -48,26 +38,22 @@ module.exports = pull.Source(function(socket) {
       return cb && cb(end);
     }
 
-    // if connecting then wait
-    if (socket.readyState === 0) {
-      return socket.addEventListener('open', handleOpen);
-    }
-
-    // if the socket is closing or closed, return end
-    if (socket.readyState >= 2) {
-      return cb(true);
-    }
-
-    // read from the socket
-    if (buffer.length > 0) {
-      if (buffer[0] === EOF) {
-        return cb(true);
+    ready(socket, function(end) {
+      if (end) {
+        return cb(end);
       }
 
-      return cb(null, buffer.shift());
-    }
+      // read from the socket
+      if (buffer.length > 0) {
+        if (buffer[0] === EOF) {
+          return cb(true);
+        }
 
-    receiver = cb;
+        return cb(null, buffer.shift());
+      }
+
+      receiver = cb;
+    });
   };
 
   return read;
