@@ -1,0 +1,38 @@
+{
+  "name": "pull-ws",
+  "version": "1.0.0",
+  "description": "Simple pull-streams for websocket client connections",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DamonOehlman/pull-ws.git"
+  },
+  "keywords": [
+    "pull-stream",
+    "websocket",
+    "ws"
+  ],
+  "author": "Damon Oehlman <damon.oehlman@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DamonOehlman/pull-ws/issues"
+  },
+  "homepage": "https://github.com/DamonOehlman/pull-ws",
+  "devDependencies": {
+    "mapleTree": "^0.5.1",
+    "pull-stream": "^2.26.0",
+    "tape": "^3.0.1",
+    "ws": "git://github.com/DamonOehlman/ws#close-terminate-initial-request",
+    "wsurl": "^1.0.0"
+  },
+  "dependencies": {
+    "pull-core": "^1.0.0"
+  },
+  "testling": {
+    "files": "test/all.js",
+    "server": "test/server.js"
+  }
+}
