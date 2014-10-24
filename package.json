@@ -25,7 +25,7 @@
     "mapleTree": "^0.5.1",
     "pull-stream": "^2.26.0",
     "tape": "^3.0.1",
-    "ws": "git://github.com/DamonOehlman/ws#close-terminate-initial-request",
+    "ws": "^0.4.2",
     "wsurl": "^1.0.0"
   },
   "dependencies": {
