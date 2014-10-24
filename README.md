@@ -21,16 +21,24 @@ var pull = require('pull-stream');
 var ws = require('pull-ws');
 
 // connect to the echo endpoint for test/server.js
-var socket = new WebSocket('ws://localhost:3000/echo');
+var socket = new WebSocket('wss://echo.websocket.org');
 
 // write values to the socket
 pull(
-  pull.values([ 'hi', 'there' ]),
+  pull.infinite(function() {
+    return 'hello @ ' + Date.now()
+  }),
+  // throttle so it doesn't go nuts
+  pull.asyncMap(function(value, cb) {
+    setTimeout(function() {
+      cb(null, value);
+    }, 100);
+  }),
   ws.sink(socket)
 );
 
 socket.addEventListener('message', function(evt) {
-  console.log('received: ', evt.data);
+  console.log('received: ' + evt.data);
 });
 
 ```
