@@ -11,6 +11,7 @@ var EOF = [];
 **/
 module.exports = pull.Source(function(socket) {
   var buffer = [];
+  var remove = socket && (socket.removeEventListener || socket.removeListener);
   var receiver;
 
   socket.addEventListener('message', function(evt) {
@@ -32,7 +33,10 @@ module.exports = pull.Source(function(socket) {
   function read(end, cb) {
 
     function handleOpen(evt) {
-      socket.removeEventListener('open', handleOpen);
+      if (typeof remove == 'function') {
+        remove.call(socket, 'open', handleOpen);
+      }
+
       read(end, cb);
     }
 
