@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Simple pull-streams for websocket client connections",
   "main": "index.js",
+  "stability": "unstable",
   "scripts": {
     "test": "node test/all.js && testling",
     "gendocs": "gendocs > README.md"
