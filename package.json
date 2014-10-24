@@ -4,7 +4,8 @@
   "description": "Simple pull-streams for websocket client connections",
   "main": "index.js",
   "scripts": {
-    "test": "node test/all.js && testling"
+    "test": "node test/all.js && testling",
+    "gendocs": "gendocs > README.md"
   },
   "repository": {
     "type": "git",

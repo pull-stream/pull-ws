@@ -2,11 +2,11 @@ var pull = require('pull-core');
 var ready = require('./ready');
 
 /**
-  ### `pull-ws/source(socket)`
+  ### `pull-ws/sink(socket, opts?)`
 
-  Create a pull-stream `Source` that will read data from the `socket`.
+  Create a pull-stream `Sink` that will write data to the `socket`.
 
-  <<< examples/read.js
+  <<< examples/write.js
 
 **/
 module.exports = pull.Sink(function(read, socket, opts) {
