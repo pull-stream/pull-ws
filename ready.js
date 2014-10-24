@@ -11,7 +11,7 @@ module.exports = function(socket, callback) {
 
   // if the socket is closing or closed, return end
   if (socket.readyState >= 2) {
-    return cb(true);
+    return callback(true);
   }
 
   // if open, trigger the callback
