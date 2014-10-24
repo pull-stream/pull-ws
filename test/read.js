@@ -20,3 +20,12 @@ test('read values from the socket and end normally', function(t) {
     t.deepEqual(values, ['a', 'b', 'c', 'd']);
   }));
 });
+
+test('read values from a new socket and end normally', function(t) {
+  t.plan(2);
+
+  ws(new WebSocket(endpoint)).pipe(pull.collect(function(err, values) {
+    t.ifError(err);
+    t.deepEqual(values, ['a', 'b', 'c', 'd']);
+  }));
+});
