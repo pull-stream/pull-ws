@@ -2,7 +2,7 @@ var pull = require('pull-core');
 var ready = require('./ready');
 
 /**
-  ### `pull-ws/sink(socket, opts?)`
+  ### `sink(socket, opts?)`
 
   Create a pull-stream `Sink` that will write data to the `socket`.
 

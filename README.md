@@ -11,11 +11,11 @@ that is compatible both with native browser WebSockets and
 
 [![browser support](https://ci.testling.com/DamonOehlman/pull-ws.png)](https://ci.testling.com/DamonOehlman/pull-ws)
 
-[![Build Status](https://img.shields.io/travis/DamonOehlman/pull-ws.svg?branch=master)](https://travis-ci.org/DamonOehlman/pull-ws) 
+[![unstable](https://img.shields.io/badge/stability-unstable-yellowgreen.svg)](https://github.com/dominictarr/stability#unstable) [![Build Status](https://img.shields.io/travis/DamonOehlman/pull-ws.svg?branch=master)](https://travis-ci.org/DamonOehlman/pull-ws) 
 
 ## Reference
 
-### `pull-ws/sink(socket, opts?)`
+### `sink(socket, opts?)`
 
 Create a pull-stream `Sink` that will write data to the `socket`.
 
@@ -38,17 +38,19 @@ socket.addEventListener('message', function(evt) {
 
 ```
 
-### `pull-ws/source(socket)`
+### `source(socket)`
 
 Create a pull-stream `Source` that will read data from the `socket`.
 
 ```js
 var pull = require('pull-stream');
-var ws = require('pull-ws');
+
+// we just need the source, so cherrypick
+var ws = require('pull-ws/source');
 
 pull(
   // connect to the test/server.js endpoint
-  ws.source(new WebSocket('ws://localhost:3000/read')),
+  ws(new WebSocket('ws://localhost:3000/read')),
   pull.log()
 );
 

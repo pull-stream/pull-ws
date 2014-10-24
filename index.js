@@ -7,6 +7,7 @@
   [`ws`](https://github.com/einaros/ws) created clients.
 
   ## Reference
+
 **/
 exports.source = require('./source');
 exports.sink = require('./sink');

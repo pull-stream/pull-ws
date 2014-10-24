@@ -3,7 +3,7 @@ var ready = require('./ready');
 var EOF = [];
 
 /**
-  ### `pull-ws/source(socket)`
+  ### `source(socket)`
 
   Create a pull-stream `Source` that will read data from the `socket`.
 
