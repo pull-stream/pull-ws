@@ -8,9 +8,6 @@ that is compatible both with native browser WebSockets and
 
 [![NPM](https://nodei.co/npm/pull-ws.png)](https://nodei.co/npm/pull-ws/)
 
-
-[![browser support](https://ci.testling.com/DamonOehlman/pull-ws.png)](https://ci.testling.com/DamonOehlman/pull-ws)
-
 [![unstable](https://img.shields.io/badge/stability-unstable-yellowgreen.svg)](https://github.com/dominictarr/stability#unstable) [![Build Status](https://img.shields.io/travis/DamonOehlman/pull-ws.svg?branch=master)](https://travis-ci.org/DamonOehlman/pull-ws) 
 
 ## Reference
