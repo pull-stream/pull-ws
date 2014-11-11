@@ -12,7 +12,7 @@ router.define('/read', function(ws) {
       ws.send(next);
     }
     else {
-      clearInterval(next);
+      clearInterval(timer);
       ws.close();
     }
   }, 100);
@@ -31,3 +31,5 @@ wss.on('connection', function(ws) {
     match.fn(ws);
   }
 });
+
+module.exports = wss
