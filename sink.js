@@ -37,7 +37,7 @@ module.exports = pull.Sink(function(read, socket, opts) {
     // socket ready?
     ready(socket, function(end) {
       if (end) {
-        return read(end);
+        return read(end, function () {});
       }
 
       socket.send(data);
