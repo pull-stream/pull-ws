@@ -2,9 +2,10 @@ var test = require('tape');
 var WebSocket = require('ws');
 var pull = require('pull-stream');
 var ws = require('..');
-var socket = new WebSocket(require('./helpers/wsurl') + '/echo');
+var url = require('./helpers/wsurl') + '/echo'
 
 test('setup echo reading and writing', function(t) {
+  var socket = new WebSocket(url);
   var expected = ['x', 'y', 'z'];
 
   t.plan(expected.length);
@@ -20,10 +21,23 @@ test('setup echo reading and writing', function(t) {
     pull.values([].concat(expected)),
     ws.sink(socket)
   );
+
 });
 
-test('close the socket', function(t) {
-  t.plan(1);
-  socket.addEventListener('close', t.pass.bind(t, 'closed'));
-  socket.close();
+
+test('duplex style', function(t) {
+  var expected = ['x', 'y', 'z'];
+  var socket = new WebSocket(url);
+
+  t.plan(expected.length);
+
+  pull(
+    pull.values([].concat(expected)),
+    ws(socket),
+    pull.drain(function(value) {
+      t.equal(value, expected.shift());
+    })
+  );
+
 });
+
