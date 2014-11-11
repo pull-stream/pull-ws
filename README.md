@@ -12,9 +12,29 @@ that is compatible both with native browser WebSockets and
 
 ## Reference
 
-### `sink(socket, opts?)`
+### `pws(socket, opts?)`
+
+turn a websocket into a duplex pull stream.
+If provided, `opts` is passed to `pws.sink(socket, opts)`.
+
+Websockets do not support half open mode.
+[see allowHalfOpen option in net module](
+http://nodejs.org/api/net.html#net_net_createserver_options_connectionlistener)
+
+If you have a protocol that assumes halfOpen connections, but are using
+a networking protocol like websockets that does not support it, I suggest
+using [pull-goodbye](https://github.com/dominictarr/pull-goodbye) with your
+protocol.
+
+### `pws.sink(socket, opts?)`
 
 Create a pull-stream `Sink` that will write data to the `socket`.
+`opts` may be `{closeOnEnd: true, onClose: onClose}`.
+`onClose` will be called when the sink ends. If `closeOnEnd=false`
+the stream will not close, it will just stop emitting data.
+(by default `closeOnEnd` is true)
+
+If `opts` is a function, then `onClose = opts; opts.closeOnEnd = true`.
 
 ```js
 var pull = require('pull-stream');
@@ -43,7 +63,7 @@ socket.addEventListener('message', function(evt) {
 
 ```
 
-### `source(socket)`
+### `pws.source(socket)`
 
 Create a pull-stream `Source` that will read data from the `socket`.
 
