@@ -1,12 +1,19 @@
 module.exports = function(socket, callback) {
   var remove = socket && (socket.removeEventListener || socket.removeListener);
 
-  function handleOpen(evt) {
+  function cleanup () {
     if (typeof remove == 'function') {
       remove.call(socket, 'open', handleOpen);
+      remove.call(socket, 'error', handleErr);
     }
+  }
 
-    callback();
+  function handleOpen(evt) {
+    cleanup(); callback();
+  }
+
+  function handleErr (evt) {
+    cleanup(); callback(evt);
   }
 
   // if the socket is closing or closed, return end
@@ -20,4 +27,5 @@ module.exports = function(socket, callback) {
   }
 
   socket.addEventListener('open', handleOpen);
+  socket.addEventListener('error', handleErr);
 };
