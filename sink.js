@@ -10,12 +10,24 @@ var ready = require('./ready');
 
 **/
 module.exports = pull.Sink(function(read, socket, opts) {
-  var closeOnEnd = (opts || {}).closeOnEnd;
+  opts = opts || {}
+  var closeOnEnd = opts.closeOnEnd !== false;
+  var onClose = 'function' === typeof opts ? opts : opts.onClose;
 
   function next(end, data) {
     // if the stream has ended, simply return
     if (end) {
       if (closeOnEnd && socket.readyState <= 1) {
+        if(onClose)
+          socket.addEventListener('close', function (ev) {
+            if(ev.wasClean) onClose()
+            else {
+              var err = new Error('ws error')
+              err.event = ev
+              onClose(err)
+            }
+          });
+
         socket.close();
       }
 
