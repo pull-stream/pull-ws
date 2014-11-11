@@ -12,6 +12,7 @@ test('websocket closed when pull source input ends', function(t) {
   pull(
     ws.source(socket),
     pull.collect(function(err) {
+      console.log('END')
       t.ifError(err, 'closed without error');
     })
   );
@@ -21,3 +22,42 @@ test('websocket closed when pull source input ends', function(t) {
     ws.sink(socket, { closeOnEnd: true })
   );
 });
+
+test('sink has callback for end of stream', function(t) {
+  var socket = new WebSocket(endpoint);
+
+  t.plan(2);
+
+  pull(
+    ws.source(socket),
+    pull.collect(function(err) {
+      t.ifError(err, 'closed without error');
+    })
+  );
+
+  pull(
+    pull.values(['x', 'y', 'z']),
+    ws.sink(socket, function (err) {
+      t.ifError(err, 'closed without error - sink');
+    })
+  );
+});
+
+
+test('closeOnEnd=false, stream doesn\'t close', function(t) {
+  var socket = new WebSocket(endpoint);
+
+  t.plan(3);
+  pull(
+    ws.source(socket),
+    pull.drain(function (item) {
+      t.ok(item)
+    })
+  );
+
+  pull(
+    pull.values(['x', 'y', 'z']),
+    ws.sink(socket, { closeOnEnd: false })
+  );
+});
+
