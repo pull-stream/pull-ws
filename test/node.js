@@ -1,9 +1,7 @@
-
 var wss = require('./server')
 var tape = require('tape')
-require('./read');
-require('./echo');
-require('./closeonend');
+
+require('./all')
 
 tape('teardown', function (t) {
   wss.close()
