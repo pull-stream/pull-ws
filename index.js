@@ -9,5 +9,14 @@
   ## Reference
 
 **/
+exports = module.exports = duplex;
+
 exports.source = require('./source');
 exports.sink = require('./sink');
+
+function duplex (ws) {
+  return {
+    sink: exports.sink(ws),
+    source: exports.source(ws)
+  };
+};
