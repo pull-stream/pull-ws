@@ -6,8 +6,7 @@
   "stability": "unstable",
   "scripts": {
     "test": "node test/node.js",
-    "browser": "testling",
-    "gendocs": "gendocs > README.md"
+    "browser": "testling"
   },
   "repository": {
     "type": "git",
