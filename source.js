@@ -1,6 +1,5 @@
 var pull = require('pull-core');
 var ready = require('./ready');
-var EOF = [];
 
 /**
   ### `source(socket)`
@@ -13,6 +12,7 @@ var EOF = [];
 module.exports = pull.Source(function(socket) {
   var buffer = [];
   var receiver;
+  var ended;
 
   socket.addEventListener('message', function(evt) {
     if (receiver) {
@@ -23,33 +23,48 @@ module.exports = pull.Source(function(socket) {
   });
 
   socket.addEventListener('close', function(evt) {
+    if (ended) return;
     if (receiver) {
-      return receiver(true);
+      return receiver(ended = true);
     }
-
-    buffer.push(EOF);
   });
 
-  function read(end, cb) {
+  socket.addEventListener('error', function (evt) {
+    if (ended) return;
+    ended = evt;
+    if (receiver) {
+      receiver(ended);
+    }
+  });
+
+  function read(abort, cb) {
     receiver = null;
 
+    //if stream has already ended.
+    if (ended)
+      return cb(ended)
+
     // if ended, abort
-    if (end) {
-      return cb && cb(end);
+    if (abort) {
+      //this will callback when socket closes
+      receiver = cb
+      return socket.close()
     }
 
     ready(socket, function(end) {
       if (end) {
-        return cb(end);
+        return cb(ended = end);
       }
 
       // read from the socket
-      if (buffer.length > 0) {
-        if (buffer[0] === EOF) {
-          return cb(true);
-        }
-
+      if (ended && ended !== true) {
+        return cb(ended);
+      }
+      else if (buffer.length > 0) {
         return cb(null, buffer.shift());
+      }
+      else if (ended) {
+        return cb(true);
       }
 
       receiver = cb;
