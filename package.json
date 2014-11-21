@@ -1,7 +1,7 @@
 {
   "name": "pull-ws-server",
-  "description": "",
-  "version": "1.0.1",
+  "description": "wrap pull streams around ws server and client",
+  "version": "1.0.2",
   "homepage": "https://github.com/dominictarr/pull-ws-server",
   "repository": {
     "type": "git",
@@ -15,6 +15,7 @@
   "scripts": {
     "test": "set -e; for t in test/*.js; do node $t; done"
   },
+  "browser": "./client.js",
   "author": "Dominic Tarr <dominic.tarr@gmail.com> (http://dominictarr.com)",
   "license": "MIT"
 }

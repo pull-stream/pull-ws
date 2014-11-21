@@ -3,17 +3,7 @@ var WebSocket = require('ws')
 var url = require('url')
 var http = require('http')
 
-exports.connect = function (addr) {
-  var u = url.format({
-    protocol: 'ws', slashes: true,
-    hostname: addr.host,
-    port: addr.port
-  })
-  var socket = new WebSocket(u)
-  var stream = ws(socket)
-  stream.socket = socket
-  return stream
-}
+exports.connect = require('./client').connect
 
 var EventEmitter = require('events').EventEmitter
 
@@ -30,19 +20,18 @@ exports.createServer = function (onConnection) {
       emitter.emit.apply(emitter, args)
     })
   }
-
   var server = http.createServer()
+  var wsServer = new WebSocket.Server({server: server})
 
-  var wsServer = new WebSocket.Server({server:server})
-  proxy(server, 'listening')
-  proxy(server, 'request')
-  proxy(server, 'close')
+  emitter.listen = function (addr, onListening) {
+    proxy(server, 'listening')
+    proxy(server, 'request')
+    proxy(server, 'close')
 
-  wsServer.on('connection', function (socket) {
+    wsServer.on('connection', function (socket) {
       emitter.emit('connection', ws(socket))
     })
 
-  emitter.listen = function (addr, onListening) {
     if(onListening)
       emitter.once('listening', onListening)
     server.listen(addr.port || addr)
@@ -50,8 +39,8 @@ exports.createServer = function (onConnection) {
   }
 
   emitter.close = function (onClose) {
-    if(!server) return onClose()
     server.close(onClose)
+    wsServer.close()
     return emitter
   }
   return emitter
