@@ -18,11 +18,11 @@ exports.connect = function (addr, opts) {
   var stream = ws(socket)
   stream.remoteAddress = u
 
-  if (opts && typeof opts.onopen == 'function') {
-    socket.on('open', opts.onopen)
+  if (opts && typeof opts.onOpen == 'function') {
+    socket.on('open', opts.onOpen)
   }
-  if (opts && typeof opts.onclose == 'function') {
-    socket.on('close', opts.onclose)
+  if (opts && typeof opts.onClose == 'function') {
+    socket.on('close', opts.onClose)
   }
 
   return stream
