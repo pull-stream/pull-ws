@@ -45,6 +45,10 @@ exports.connect = function (addr, opts) {
     socket.on('close', opts.onClose)
   }
 
+  stream.close = function (cb) {
+    socket.close(cb)
+  }
+
   return stream
 }
 
