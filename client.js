@@ -2,7 +2,7 @@ var ws = require('pull-ws')
 var WebSocket = require('ws')
 var url = require('url')
 
-exports.connect = function (addr, cb) {
+exports.connect = function (addr, opts) {
   var u = (
     'string' === typeof addr
   ? addr
@@ -16,7 +16,15 @@ exports.connect = function (addr, cb) {
 
   var socket = new WebSocket(u)
   var stream = ws(socket)
-  stream.socket = socket
+  stream.remoteAddress = u
+
+  if (opts && typeof opts.onopen == 'function') {
+    socket.on('open', opts.onopen)
+  }
+  if (opts && typeof opts.onclose == 'function') {
+    socket.on('close', opts.onclose)
+  }
+
   return stream
 }
 
