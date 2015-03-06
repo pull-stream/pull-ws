@@ -2,6 +2,11 @@ var ws = require('pull-ws')
 var WebSocket = require('ws')
 var url = require('url')
 
+
+function isFunction (f) {
+  return 'function' === typeof f
+}
+
 exports.connect = function (addr, opts) {
   if(isFunction(opts)) {
     var cb = opts
