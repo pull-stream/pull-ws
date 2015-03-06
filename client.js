@@ -3,6 +3,21 @@ var WebSocket = require('ws')
 var url = require('url')
 
 exports.connect = function (addr, opts) {
+  if(isFunction(opts)) {
+    var cb = opts
+    opts = {
+      onOpen: function () {
+        if(called) return
+        called = true
+        cb()
+      },
+      onClose: function (err) {
+        if(called) return
+        called = true
+        cb(err)
+      }
+    }
+  }
   var u = (
     'string' === typeof addr
   ? addr
