@@ -10,6 +10,7 @@ function isFunction (f) {
 exports.connect = function (addr, opts) {
   if(isFunction(opts)) {
     var cb = opts
+    var called = false
     opts = {
       onOpen: function () {
         if(called) return
