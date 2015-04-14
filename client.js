@@ -1,3 +1,4 @@
+'use strict';
 var ws = require('pull-ws')
 var WebSocket = require('ws')
 var url = require('url')
