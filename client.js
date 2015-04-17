@@ -41,10 +41,10 @@ exports.connect = function (addr, opts) {
   stream.remoteAddress = u
 
   if (opts && typeof opts.onOpen == 'function') {
-    socket.on('open', opts.onOpen)
+    socket.addEventListener('open', opts.onOpen)
   }
   if (opts && typeof opts.onClose == 'function') {
-    socket.on('close', opts.onClose)
+    socket.addEventListener('close', opts.onClose)
   }
 
   stream.close = function (cb) {
