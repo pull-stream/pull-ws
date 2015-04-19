@@ -48,7 +48,9 @@ exports.connect = function (addr, opts) {
   }
 
   stream.close = function (cb) {
-    socket.close(cb)
+    if (cb && typeof cb == 'function')
+      socket.addEventListener('close', cb)
+    socket.close()
   }
 
   return stream
