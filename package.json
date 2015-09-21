@@ -25,12 +25,12 @@
   "homepage": "https://github.com/DamonOehlman/pull-ws",
   "devDependencies": {
     "mapleTree": "^0.5.1",
+    "pull-goodbye": "~0.0.1",
     "pull-stream": "^2.26.0",
-    "tape": "^3.0.1",
+    "tape": "^4.2.0",
     "testling": "^1.7.1",
-    "ws": "^0.4.2",
-    "wsurl": "^1.0.0",
-    "pull-goodbye": "~0.0.1"
+    "ws": "^0.8.0",
+    "wsurl": "^1.0.0"
   },
   "dependencies": {
     "pull-core": "^1.0.0"
