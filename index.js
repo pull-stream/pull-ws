@@ -2,14 +2,20 @@ var ws = require('pull-ws')
 var WebSocket = require('ws')
 var url = require('url')
 var http = require('http')
+var https = require('https')
 
 exports.connect = require('./client').connect
 
 var EventEmitter = require('events').EventEmitter
 
-exports.createServer = function (onConnection) {
+exports.createServer = function (tlsOpts, onConnection) {
   var emitter = new EventEmitter()
   var server
+  if (typeof tlsOpts === 'function'){
+    onConnection = tlsOpts
+    tlsOpts = null
+  }
+
   if(onConnection)
     emitter.on('connection', onConnection)
 
@@ -20,7 +26,7 @@ exports.createServer = function (onConnection) {
       emitter.emit.apply(emitter, args)
     })
   }
-  var server = http.createServer()
+  var server = (tlsOpts) ? https.createServer(tlsOpts) : http.createServer()
   var wsServer = new WebSocket.Server({server: server})
 
   emitter.listen = function (addr, onListening) {

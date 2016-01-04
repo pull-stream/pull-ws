@@ -29,7 +29,20 @@ var stream = ws.connect('ws://localhost:9999', function (err) {
   console.log('disconnected')
 })
 
+```
 
+To run the server over TLS:
+
+```js
+var tlsOpts = {
+  key: fs.readFileSync('test/fixtures/keys/agent2-key.pem'),
+  cert: fs.readFileSync('test/fixtures/keys/agent2-cert.pem')
+};
+ws.createServer(tlsOpts, function (stream) {
+  //pipe duplex style to your service.
+  pull(stream, service.createStream(), stream)
+})
+.listen(9999)
 ```
 
 ## License
