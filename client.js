@@ -9,6 +9,7 @@ function isFunction (f) {
 }
 
 exports.connect = function (addr, opts) {
+  var stream
   if(isFunction(opts)) {
     var cb = opts
     var called = false
@@ -16,7 +17,7 @@ exports.connect = function (addr, opts) {
       onOpen: function () {
         if(called) return
         called = true
-        cb()
+        cb(null, stream)
       },
       onClose: function (err) {
         if(called) return
@@ -37,7 +38,7 @@ exports.connect = function (addr, opts) {
   )
 
   var socket = new WebSocket(u)
-  var stream = ws(socket)
+  stream = ws(socket)
   stream.remoteAddress = u
 
   if (opts && typeof opts.onOpen == 'function') {
