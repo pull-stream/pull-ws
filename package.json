@@ -11,7 +11,10 @@
     "pull-ws": "~2.1.0",
     "ws": "git://github.com/dominictarr/ws.git#590d0ea0d62b0c533cd6f26ff0e3f31f946a80db"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "pull-json-doubleline": "^1.0.0",
+    "tape": "^4.4.0"
+  },
   "scripts": {
     "test": "set -e; for t in test/*.js; do node $t; done"
   },
