@@ -21,12 +21,13 @@ var stream = ws.connect('ws://localhost:9999')
 pull(stream, client.createStream(), stream)
 ```
 
-to get a handle of stream end/error pass a callback to connect.
+if the connection fails, the first read from the stream will be an error,
+otherwise, to get a handle of stream end/error pass a callback to connect.
 
 ``` js
-var stream = ws.connect('ws://localhost:9999', function (err) {
-  if(err) throw err
-  console.log('disconnected')
+ws.connect('ws://localhost:9999', function (err, stream) {
+  if(err) return handleError(err)
+  //stream is now ready
 })
 
 ```
@@ -48,3 +49,5 @@ ws.createServer(tlsOpts, function (stream) {
 ## License
 
 MIT
+
+
