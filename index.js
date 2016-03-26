@@ -8,13 +8,14 @@ exports.connect = require('./client').connect
 
 var EventEmitter = require('events').EventEmitter
 
-exports.createServer = function (tlsOpts, onConnection) {
+exports.createServer = function (opts, onConnection) {
   var emitter = new EventEmitter()
   var server
-  if (typeof tlsOpts === 'function'){
-    onConnection = tlsOpts
-    tlsOpts = null
+  if (typeof opts === 'function'){
+    onConnection = opts
+    opts = null
   }
+  opts = opts || {}
 
   if(onConnection)
     emitter.on('connection', onConnection)
@@ -26,8 +27,11 @@ exports.createServer = function (tlsOpts, onConnection) {
       emitter.emit.apply(emitter, args)
     })
   }
-  var server = (tlsOpts) ? https.createServer(tlsOpts) : http.createServer()
-  var wsServer = new WebSocket.Server({server: server})
+  var server = (opts.tls) ? https.createServer(opts.tls) : http.createServer()
+  var wsServer = new WebSocket.Server({
+    server: server,
+    verifyClient: opts.verifyClient
+  })
 
   emitter.listen = function (addr, onListening) {
     proxy(server, 'listening')

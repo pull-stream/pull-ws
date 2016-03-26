@@ -39,11 +39,21 @@ var tlsOpts = {
   key: fs.readFileSync('test/fixtures/keys/agent2-key.pem'),
   cert: fs.readFileSync('test/fixtures/keys/agent2-cert.pem')
 };
-ws.createServer(tlsOpts, function (stream) {
+ws.createServer({ tls: tlsOpts }, function (stream) {
   //pipe duplex style to your service.
   pull(stream, service.createStream(), stream)
 })
 .listen(9999)
+```
+
+To add client-authentication to the server, you can set `verifyClient`.
+[Documentation here](https://github.com/websockets/ws/blob/master/doc/ws.md#optionsverifyclient).
+
+```js
+function verifyClient (info) {
+  return info.secure == true
+}
+ws.createServer({ verifyClient: verifyClient }, onStream)
 ```
 
 ## License
