@@ -39,7 +39,7 @@ var tlsOpts = {
   key: fs.readFileSync('test/fixtures/keys/agent2-key.pem'),
   cert: fs.readFileSync('test/fixtures/keys/agent2-cert.pem')
 };
-ws.createServer({ tls: tlsOpts }, function (stream) {
+ws.createServer(tlsOpts, function (stream) {
   //pipe duplex style to your service.
   pull(stream, service.createStream(), stream)
 })
