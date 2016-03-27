@@ -27,7 +27,9 @@ exports.createServer = function (opts, onConnection) {
       emitter.emit.apply(emitter, args)
     })
   }
-  var server = (opts.tls) ? https.createServer(opts.tls) : http.createServer()
+ 
+  var server =
+    opts.key && opts.cert ? https.createServer(opts) : http.createServer()
   var wsServer = new WebSocket.Server({
     server: server,
     verifyClient: opts.verifyClient
@@ -57,4 +59,5 @@ exports.createServer = function (opts, onConnection) {
   }
   return emitter
 }
+
 
