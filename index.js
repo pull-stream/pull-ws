@@ -27,25 +27,26 @@ exports.createServer = function (opts, onConnection) {
       emitter.emit.apply(emitter, args)
     })
   }
- 
-  var server =
-    opts.key && opts.cert ? https.createServer(opts) : http.createServer()
+
+  var server = opts.server ||
+    (opts.key && opts.cert ? https.createServer(opts) : http.createServer())
+
   var wsServer = new WebSocket.Server({
     server: server,
     verifyClient: opts.verifyClient
   })
 
+  proxy(server, 'listening')
+  proxy(server, 'request')
+  proxy(server, 'close')
+
+  wsServer.on('connection', function (socket) {
+    var stream = ws(socket)
+    stream.remoteAddress = socket.upgradeReq.socket.remoteAddress
+    emitter.emit('connection', stream)
+  })
+
   emitter.listen = function (addr, onListening) {
-    proxy(server, 'listening')
-    proxy(server, 'request')
-    proxy(server, 'close')
-
-    wsServer.on('connection', function (socket) {
-      var stream = ws(socket)
-      stream.remoteAddress = socket.upgradeReq.socket.remoteAddress
-      emitter.emit('connection', stream)
-    })
-
     if(onListening)
       emitter.once('listening', onListening)
     server.listen(addr.port || addr)
@@ -59,5 +60,7 @@ exports.createServer = function (opts, onConnection) {
   }
   return emitter
 }
+
+
 
 
