@@ -56,6 +56,18 @@ function verifyClient (info) {
 ws.createServer({ verifyClient: verifyClient }, onStream)
 ```
 
+## use with an http server
+
+if you have an http server that you also need to serve stuff
+over, and want to use a single port, use the `server` option.
+
+``` js
+var http = require('http')
+var server = http.createServer(function(req, res){...}).listen(....)
+ws.createServer({server: server}, function (stream) { ... })
+
+```
+
 ## License
 
 MIT
