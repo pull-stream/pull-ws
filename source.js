@@ -1,4 +1,3 @@
-var pull = require('pull-core');
 var ready = require('./ready');
 
 /**
@@ -9,7 +8,7 @@ var ready = require('./ready');
   <<< examples/read.js
 
 **/
-module.exports = pull.Source(function(socket) {
+module.exports = function(socket) {
   var buffer = [];
   var receiver;
   var ended;
@@ -72,4 +71,7 @@ module.exports = pull.Source(function(socket) {
   };
 
   return read;
-});
+};
+
+
+
