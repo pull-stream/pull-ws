@@ -1,4 +1,3 @@
-var pull = require('pull-core');
 var ready = require('./ready');
 
 /**
@@ -9,43 +8,46 @@ var ready = require('./ready');
   <<< examples/write.js
 
 **/
-module.exports = pull.Sink(function(read, socket, opts) {
-  opts = opts || {}
-  var closeOnEnd = opts.closeOnEnd !== false;
-  var onClose = 'function' === typeof opts ? opts : opts.onClose;
+module.exports = function(socket, opts) {
+  return function (read) {
+    opts = opts || {}
+    var closeOnEnd = opts.closeOnEnd !== false;
+    var onClose = 'function' === typeof opts ? opts : opts.onClose;
 
-  function next(end, data) {
-    // if the stream has ended, simply return
-    if (end) {
-      if (closeOnEnd && socket.readyState <= 1) {
-        if(onClose)
-          socket.addEventListener('close', function (ev) {
-            if(ev.wasClean) onClose()
-            else {
-              var err = new Error('ws error')
-              err.event = ev
-              onClose(err)
-            }
-          });
+    function next(end, data) {
+      // if the stream has ended, simply return
+      if (end) {
+        if (closeOnEnd && socket.readyState <= 1) {
+          if(onClose)
+            socket.addEventListener('close', function (ev) {
+              if(ev.wasClean) onClose()
+              else {
+                var err = new Error('ws error')
+                err.event = ev
+                onClose(err)
+              }
+            });
 
-        socket.close();
+          socket.close();
+        }
+
+        return;
       }
 
-      return;
+      // socket ready?
+      ready(socket, function(end) {
+        if (end) {
+          return read(end, function () {});
+        }
+
+        socket.send(data);
+        process.nextTick(function() {
+          read(null, next);
+        });
+      });
     }
 
-    // socket ready?
-    ready(socket, function(end) {
-      if (end) {
-        return read(end, function () {});
-      }
-
-      socket.send(data);
-      process.nextTick(function() {
-        read(null, next);
-      });
-    });
+    read(null, next);
   }
+}
 
-  read(null, next);
-});

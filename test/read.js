@@ -15,17 +15,23 @@ test('create a websocket connection to the server', function(t) {
 test('read values from the socket and end normally', function(t) {
   t.plan(2);
 
-  ws(socket).pipe(pull.collect(function(err, values) {
-    t.ifError(err);
-    t.deepEqual(values, ['a', 'b', 'c', 'd']);
-  }));
+  pull(
+    ws(socket),
+    pull.collect(function(err, values) {
+      t.ifError(err);
+      t.deepEqual(values, ['a', 'b', 'c', 'd']);
+    })
+  );
 });
 
 test('read values from a new socket and end normally', function(t) {
   t.plan(2);
 
-  ws(new WebSocket(endpoint)).pipe(pull.collect(function(err, values) {
-    t.ifError(err);
-    t.deepEqual(values, ['a', 'b', 'c', 'd']);
-  }));
+  pull(
+    ws(new WebSocket(endpoint)),
+    pull.collect(function(err, values) {
+      t.ifError(err);
+      t.deepEqual(values, ['a', 'b', 'c', 'd']);
+    })
+  );
 });
