@@ -26,6 +26,10 @@ a networking protocol like websockets that does not support it, I suggest
 using [pull-goodbye](https://github.com/dominictarr/pull-goodbye) with your
 protocol.
 
+The duplex stream will also contain a copy of the properties from
+the http request that became the websocket. they are `method`, `url`,
+`headers` and `upgrade`.
+
 ### `pws.sink(socket, opts?)`
 
 Create a pull-stream `Sink` that will write data to the `socket`.
