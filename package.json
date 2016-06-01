@@ -1,7 +1,7 @@
 {
   "name": "pull-ws-server",
   "description": "wrap pull streams around ws server and client",
-  "version": "1.9.0",
+  "version": "1.9.1",
   "homepage": "https://github.com/ssbc/pull-ws-server",
   "repository": {
     "type": "git",
