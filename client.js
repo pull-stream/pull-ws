@@ -26,7 +26,7 @@ exports.connect = function (addr, opts) {
     }
   }
 
-  var url = wsurl(addr)
+  var url = wsurl(addr, window.location)
   var socket = new WebSocket(url)
   stream = ws(socket)
   stream.remoteAddress = url
