@@ -1,8 +1,7 @@
 'use strict';
 var ws = require('pull-ws')
 var WebSocket = require('ws')
-var url = require('url')
-
+var wsurl = require('./ws-url')
 
 function isFunction (f) {
   return 'function' === typeof f
@@ -26,20 +25,11 @@ exports.connect = function (addr, opts) {
       }
     }
   }
-  var u = (
-    'string' === typeof addr
-  ? addr
-  : url.format({
-      protocol: 'ws', slashes: true,
-      hostname: addr.host || addr.hostname,
-      port: addr.port,
-      pathname: addr.pathname
-    })
-  )
 
-  var socket = new WebSocket(u)
+  var url = wsurl(addr)
+  var socket = new WebSocket(url)
   stream = ws(socket)
-  stream.remoteAddress = u
+  stream.remoteAddress = url
 
   if (opts && typeof opts.onOpen == 'function') {
     socket.addEventListener('open', opts.onOpen)
@@ -56,4 +46,6 @@ exports.connect = function (addr, opts) {
 
   return stream
 }
+
+
 
