@@ -9,36 +9,14 @@ function isFunction (f) {
 
 exports.connect = function (addr, opts) {
   var stream
-  if(isFunction(opts)) {
-    var cb = opts
-    var called = false
-    opts = {
-      onOpen: function () {
-        if(called) return
-        called = true
-        cb(null, stream)
-      },
-      onClose: function (err) {
-        if(called) return
-        called = true
-        cb(err)
-      }
-    }
-  }
+  if(isFunction(opts)) opts = {onConnect: opts}
 
   var location = typeof window === 'undefined' ? {} : window.location
 
   var url = wsurl(addr, location)
   var socket = new WebSocket(url)
-  stream = ws(socket)
+  stream = ws(socket, opts)
   stream.remoteAddress = url
-
-  if (opts && typeof opts.onOpen == 'function') {
-    socket.addEventListener('open', opts.onOpen)
-  }
-  if (opts && typeof opts.onClose == 'function') {
-    socket.addEventListener('close', opts.onClose)
-  }
 
   stream.close = function (cb) {
     if (cb && typeof cb == 'function')
@@ -48,6 +26,9 @@ exports.connect = function (addr, opts) {
 
   return stream
 }
+
+
+
 
 
 
