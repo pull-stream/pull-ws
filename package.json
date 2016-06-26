@@ -23,17 +23,28 @@
     "url": "https://github.com/DamonOehlman/pull-ws/issues"
   },
   "homepage": "https://github.com/DamonOehlman/pull-ws",
+  "dependencies": {
+    "ws": "^0.8.0"
+  },
+
   "devDependencies": {
     "mapleTree": "^0.5.1",
     "pull-goodbye": "~0.0.1",
     "pull-stream": "^3.2.3",
     "tape": "^4.2.0",
     "testling": "^1.7.1",
-    "ws": "^0.8.0",
-    "wsurl": "^1.0.0"
+    "relative-url": "^1.0.0",
+    "pull-json-doubleline": "^1.0.0",
+    "pull-split": "^0.2.0",
+    "pull-stream": "^3.3.2",
+    "pull-through": "^1.0.18",
+    "tape": "^4.4.0"
   },
+
   "testling": {
     "files": "test/all.js",
     "server": "test/server.js"
   }
 }
+
+

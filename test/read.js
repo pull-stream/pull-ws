@@ -5,6 +5,8 @@ var pull = require('pull-stream');
 var ws = require('../source');
 var socket;
 
+var server = require('./server')()
+
 test('create a websocket connection to the server', function(t) {
   t.plan(1);
 
@@ -35,3 +37,8 @@ test('read values from a new socket and end normally', function(t) {
     })
   );
 });
+
+test('close', function (t) {
+  server.close()
+  t.end()
+})

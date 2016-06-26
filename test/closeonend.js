@@ -4,6 +4,8 @@ var endpoint = require('./helpers/wsurl') + '/echo';
 var pull = require('pull-stream');
 var ws = require('..');
 
+var server = require('./server')()
+
 test('websocket closed when pull source input ends', function(t) {
   var socket = new WebSocket(endpoint);
 
@@ -61,3 +63,7 @@ test('closeOnEnd=false, stream doesn\'t close', function(t) {
   );
 });
 
+test('close', function (t) {
+  server.close()
+  t.end()
+})
