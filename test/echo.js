@@ -5,6 +5,8 @@ var ws = require('..');
 var url = require('./helpers/wsurl') + '/echo';
 var goodbye = require('pull-goodbye');
 
+var server = require('./server')()
+
 test('setup echo reading and writing', function(t) {
   var socket = new WebSocket(url);
   var expected = ['x', 'y', 'z'];
@@ -67,4 +69,9 @@ test('duplex with goodbye handshake', function (t) {
   );
 
 
+})
+
+test('close', function (t) {
+  server.close()
+  t.end()
 })

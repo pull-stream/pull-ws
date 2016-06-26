@@ -1,5 +1,3 @@
-var ready = require('./ready');
-
 /**
   ### `source(socket)`
 
@@ -8,11 +6,12 @@ var ready = require('./ready');
   <<< examples/read.js
 
 **/
-module.exports = function(socket) {
+
+module.exports = function(socket, cb) {
   var buffer = [];
   var receiver;
   var ended;
-
+  var started = false;
   socket.addEventListener('message', function(evt) {
     if (receiver) {
       return receiver(null, evt.data);
@@ -22,56 +21,57 @@ module.exports = function(socket) {
   });
 
   socket.addEventListener('close', function(evt) {
-    if (ended) return;
+    if (ended) return
     if (receiver) {
-      return receiver(ended = true);
+      receiver(ended = true)
     }
   });
 
   socket.addEventListener('error', function (evt) {
     if (ended) return;
     ended = evt;
+    if(!started) {
+      started = true
+      cb && cb(evt)
+    }
     if (receiver) {
-      receiver(ended);
+      receiver(ended)
     }
   });
+
+  socket.addEventListener('open', function (evt) {
+    if(started || ended) return
+    started = true
+    cb && cb()
+  })
 
   function read(abort, cb) {
     receiver = null;
 
     //if stream has already ended.
     if (ended)
-      return cb(ended)
+      return cb(ended);
 
     // if ended, abort
-    if (abort) {
+    else if (abort) {
       //this will callback when socket closes
       receiver = cb
-      return socket.close()
+      socket.close()
     }
 
-    ready(socket, function(end) {
-      if (end) {
-        return cb(ended = end);
-      }
+    // return data, if any
+    else if(buffer.length > 0)
+      cb(null, buffer.shift());
 
-      // read from the socket
-      if (ended && ended !== true) {
-        return cb(ended);
-      }
-      else if (buffer.length > 0) {
-        return cb(null, buffer.shift());
-      }
-      else if (ended) {
-        return cb(true);
-      }
-
+    // wait for more data (or end)
+    else
       receiver = cb;
-    });
+
   };
 
   return read;
 };
+
 
 
 
