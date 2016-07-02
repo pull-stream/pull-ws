@@ -5,7 +5,7 @@
   "main": "index.js",
   "stability": "unstable",
   "scripts": {
-    "test": "node test/node.js",
+    "test": "tap test/*.js",
     "browser": "testling"
   },
   "repository": {
@@ -30,16 +30,17 @@
   "devDependencies": {
     "mapleTree": "^0.5.1",
     "pull-goodbye": "~0.0.1",
-    "pull-stream": "^3.3.2",
-    "tape": "^4.4.0",
-    "testling": "^1.7.1",
-    "relative-url": "^1.0.0",
     "pull-json-doubleline": "^1.0.0",
     "pull-split": "^0.2.0",
-    "pull-through": "^1.0.18"
+    "pull-stream": "^3.3.2",
+    "pull-through": "^1.0.18",
+    "tap": "^5.7.2",
+    "tape": "^4.4.0",
+    "testling": "^1.7.1"
   },
   "testling": {
     "files": "test/all.js",
     "server": "test/server.js"
   }
 }
+
