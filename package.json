@@ -1,6 +1,6 @@
 {
   "name": "pull-ws",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Simple pull-streams for websocket client connections",
   "main": "index.js",
   "stability": "unstable",
@@ -43,4 +43,3 @@
     "server": "test/server.js"
   }
 }
-
