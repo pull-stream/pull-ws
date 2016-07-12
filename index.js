@@ -10,7 +10,7 @@ function duplex (ws, opts) {
   if(opts.binaryType)
     ws.binaryType = opts.binaryType
   else if(opts.binary)
-    ws.binaryType = 'arraybuffer')
+    ws.binaryType = 'arraybuffer'
   return {
     source: exports.source(ws, opts && opts.onConnect),
     sink: exports.sink(ws, opts),
