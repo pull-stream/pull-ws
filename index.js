@@ -7,9 +7,9 @@ exports.connect = require('./client').connect
 
 function duplex (ws, opts) {
   var req = ws.upgradeReq || {}
-  if(opts.binaryType)
+  if(opts && opts.binaryType)
     ws.binaryType = opts.binaryType
-  else if(opts.binary)
+  else if(opts && opts.binary)
     ws.binaryType = 'arraybuffer'
   return {
     source: exports.source(ws, opts && opts.onConnect),
