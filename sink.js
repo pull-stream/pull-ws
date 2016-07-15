@@ -20,15 +20,16 @@ module.exports = function(socket, opts) {
         if (closeOnEnd && socket.readyState <= 1) {
           if(onClose)
             socket.addEventListener('close', function (ev) {
-              if(ev.wasClean) onClose()
+              if(ev.wasClean || ev.code === 1006) onClose()
               else {
+                console.log(ev)
                 var err = new Error('ws error')
                 err.event = ev
                 onClose(err)
               }
             });
 
-          socket.close();
+          socket.close()
         }
 
         return;
@@ -50,4 +51,6 @@ module.exports = function(socket, opts) {
     read(null, next);
   }
 }
+
+
 
