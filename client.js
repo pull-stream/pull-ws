@@ -1,6 +1,9 @@
 'use strict';
 var ws = require('./')
-var WebSocket = require('ws')
+
+//load websocket library if we are not in the browser
+var WebSocket = require('./web-socket')
+
 var wsurl = require('./ws-url')
 
 function isFunction (f) {
@@ -26,6 +29,7 @@ exports.connect = function (addr, opts) {
 
   return stream
 }
+
 
 
 

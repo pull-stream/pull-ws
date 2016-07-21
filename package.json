@@ -38,6 +38,9 @@
     "tape": "^4.4.0",
     "testling": "^1.7.1"
   },
+  "browser": {
+    "ws": false
+  },
   "testling": {
     "files": "test/all.js",
     "server": "test/server.js"
