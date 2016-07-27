@@ -1,9 +1,8 @@
 'use strict';
-var ws = require('./')
 
 //load websocket library if we are not in the browser
 var WebSocket = require('./web-socket')
-
+var duplex = require('./duplex')
 var wsurl = require('./ws-url')
 
 function isFunction (f) {
@@ -18,7 +17,7 @@ exports.connect = function (addr, opts) {
 
   var url = wsurl(addr, location)
   var socket = new WebSocket(url)
-  stream = ws(socket, opts)
+  stream = duplex(socket, opts)
   stream.remoteAddress = url
 
   stream.close = function (cb) {
@@ -29,11 +28,3 @@ exports.connect = function (addr, opts) {
 
   return stream
 }
-
-
-
-
-
-
-
-
