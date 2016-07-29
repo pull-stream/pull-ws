@@ -9,7 +9,7 @@ function isFunction (f) {
   return 'function' === typeof f
 }
 
-exports.connect = function (addr, opts) {
+module.exports = function (addr, opts) {
   var stream
   if(isFunction(opts)) opts = {onConnect: opts}
 
@@ -28,3 +28,5 @@ exports.connect = function (addr, opts) {
 
   return stream
 }
+
+exports.connect = module.exports
