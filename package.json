@@ -39,7 +39,8 @@
     "testling": "^1.7.1"
   },
   "browser": {
-    "ws": false
+    "ws": false,
+    "./server": false
   },
   "testling": {
     "files": "test/all.js",
