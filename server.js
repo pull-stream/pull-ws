@@ -4,11 +4,9 @@ var url = require('url')
 var http = require('http')
 var https = require('https')
 
-exports.connect = require('./client').connect
-
 var EventEmitter = require('events').EventEmitter
 
-exports.createServer = function (opts, onConnection) {
+module.exports = function (opts, onConnection) {
   var emitter = new EventEmitter()
   var server
   if (typeof opts === 'function'){
@@ -60,7 +58,4 @@ exports.createServer = function (opts, onConnection) {
   }
   return emitter
 }
-
-
-
 
