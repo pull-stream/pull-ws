@@ -1,4 +1,4 @@
-exports = module.exports = require('./duplex')
+var exports = module.exports = require('./duplex')
 
 exports.source = require('./source');
 exports.sink = require('./sink');

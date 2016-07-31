@@ -29,4 +29,4 @@ module.exports = function (addr, opts) {
   return stream
 }
 
-exports.connect = module.exports
+module.exports.connect = module.exports
