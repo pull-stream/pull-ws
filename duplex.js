@@ -17,7 +17,8 @@ function duplex (ws, opts) {
     headers: req.headers,
     url: req.url,
     upgrade: req.upgrade,
-    method: req.method
+    method: req.method,
+    id: req.id
   };
 };
 
