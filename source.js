@@ -13,11 +13,17 @@ module.exports = function(socket, cb) {
   var ended;
   var started = false;
   socket.addEventListener('message', function(evt) {
-    if (receiver) {
-      return receiver(null, evt.data);
+    var data = evt.data;
+
+    if (data instanceof ArrayBuffer) {
+      data = new Buffer(data);
     }
 
-    buffer.push(evt.data);
+    if (receiver) {
+      return receiver(null, data);
+    }
+
+    buffer.push(data);
   });
 
   socket.addEventListener('close', function(evt) {
@@ -71,7 +77,3 @@ module.exports = function(socket, cb) {
 
   return read;
 };
-
-
-
-
