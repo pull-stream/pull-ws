@@ -8,6 +8,9 @@ var ready = require('./ready');
   <<< examples/write.js
 
 **/
+
+var nextTick = typeof setImmediate !== 'undefined' ? setImmediate : process.nextTick
+
 module.exports = function(socket, opts) {
   return function (read) {
     opts = opts || {}
@@ -22,7 +25,6 @@ module.exports = function(socket, opts) {
             socket.addEventListener('close', function (ev) {
               if(ev.wasClean || ev.code === 1006) onClose()
               else {
-                console.log(ev)
                 var err = new Error('ws error')
                 err.event = ev
                 onClose(err)
@@ -40,9 +42,8 @@ module.exports = function(socket, opts) {
         if (end) {
           return read(end, function () {});
         }
-
         socket.send(data);
-        process.nextTick(function() {
+        nextTick(function() {
           read(null, next);
         });
       });
@@ -51,6 +52,3 @@ module.exports = function(socket, opts) {
     read(null, next);
   }
 }
-
-
-
