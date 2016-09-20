@@ -48,7 +48,7 @@ module.exports = function(socket, cb) {
   socket.addEventListener('open', function (evt) {
     if(started || ended) return
     started = true
-    cb && cb()
+    cb && cb(null, read)
   })
 
   function read(abort, cb) {
