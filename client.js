@@ -10,21 +10,27 @@ function isFunction (f) {
 }
 
 module.exports = function (addr, opts) {
-  var stream
-  if(isFunction(opts)) opts = {onConnect: opts}
+  if (isFunction(opts)) opts = {onConnect: opts}
 
   var location = typeof window === 'undefined' ? {} : window.location
 
   var url = wsurl(addr, location)
   var socket = new WebSocket(url)
-  stream = duplex(socket, opts)
-  stream.remoteAddress = url
 
+  var stream = duplex(socket, opts)
+  stream.remoteAddress = url
   stream.close = function (cb) {
-    if (cb && typeof cb == 'function')
+    if (isFunction(cb)) {
       socket.addEventListener('close', cb)
+    }
     socket.close()
   }
+
+  socket.addEventListener('open', function (e) {
+    if (opts && isFunction(opts.onConnect)) {
+      opts.onConnect(null, stream)
+    }
+  })
 
   return stream
 }
