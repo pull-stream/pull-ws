@@ -5,6 +5,8 @@ var http = require('http')
 var https = require('https')
 
 var EventEmitter = require('events').EventEmitter
+if(!WebSocket.Server)
+  return module.exports = null
 
 module.exports = function (opts, onConnection) {
   var emitter = new EventEmitter()
