@@ -1,5 +1,5 @@
 var ws = require('./')
-var WebSocket = require('./web-socket')
+var WebSocket = require('ws')
 var url = require('url')
 var http = require('http')
 var https = require('https')
