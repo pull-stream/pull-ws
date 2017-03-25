@@ -43,6 +43,7 @@ module.exports = function (opts, onConnection) {
   wsServer.on('connection', function (socket) {
     var stream = ws(socket)
     stream.remoteAddress = socket.upgradeReq.socket.remoteAddress
+    stream.remotePort = socket.upgradeReq.socket.remotePort
     emitter.emit('connection', stream)
   })
 
@@ -60,4 +61,5 @@ module.exports = function (opts, onConnection) {
   }
   return emitter
 }
+
 
