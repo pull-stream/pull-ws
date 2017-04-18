@@ -48,7 +48,7 @@ connect(url, function (err, stream) {
 ```
 
 
-### `createServer = require('pull-ws/server')
+### `createServer = require('pull-ws/server')`
 
 create pull stream websocket servers.
 the servers take a lot more options than clients.
