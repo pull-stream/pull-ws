@@ -6,6 +6,15 @@
   <<< examples/read.js
 
 **/
+var Buffer = require('safe-buffer').Buffer;
+
+// copied from github.com/feross/buffer
+// Some ArrayBuffers are not passing the instanceof check, so we need to do a bit more work :(
+function isArrayBuffer (obj) {
+  return obj instanceof ArrayBuffer ||
+    (obj != null && obj.constructor != null && obj.constructor.name === 'ArrayBuffer' &&
+      typeof obj.byteLength === 'number')
+}
 
 module.exports = function(socket, cb) {
   var buffer = [];
@@ -14,9 +23,8 @@ module.exports = function(socket, cb) {
   var started = false;
   socket.addEventListener('message', function(evt) {
     var data = evt.data;
-
-    if (data instanceof ArrayBuffer) {
-      data = new Buffer(data);
+    if (isArrayBuffer(data)) {
+      data = Buffer.from(data);
     }
 
     if (receiver) {

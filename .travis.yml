@@ -5,6 +5,7 @@ node_js:
 - 4
 - 5
 - 6
+- 8
 
 before_script:
   - export DISPLAY=:99.0
@@ -13,6 +14,3 @@ before_script:
 notifications:
   email:
   - damon.oehlman@gmail.com
-
-
-
