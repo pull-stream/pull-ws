@@ -59,6 +59,8 @@ module.exports = function (opts, onConnection) {
     wsServer.close()
     return emitter
   }
+
+  emitter.address = server.address.bind(server)
   return emitter
 }
 
