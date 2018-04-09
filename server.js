@@ -5,62 +5,63 @@ var http = require('http')
 var https = require('https')
 
 var EventEmitter = require('events').EventEmitter
-if(!WebSocket.Server)
-  return module.exports = null
+module.exports = !WebSocket.Server ? null : function (opts, onConnection) {
+    var emitter = new EventEmitter()
+    var server
+    if (typeof opts === 'function'){
+      onConnection = opts
+      opts = null
+    }
+    opts = opts || {}
 
-module.exports = function (opts, onConnection) {
-  var emitter = new EventEmitter()
-  var server
-  if (typeof opts === 'function'){
-    onConnection = opts
-    opts = null
-  }
-  opts = opts || {}
+    if(onConnection)
+      emitter.on('connection', onConnection)
 
-  if(onConnection)
-    emitter.on('connection', onConnection)
+    function proxy (server, event) {
+      return server.on(event, function () {
+        var args = [].slice.call(arguments)
+        args.unshift(event)
+        emitter.emit.apply(emitter, args)
+      })
+    }
 
-  function proxy (server, event) {
-    return server.on(event, function () {
-      var args = [].slice.call(arguments)
-      args.unshift(event)
-      emitter.emit.apply(emitter, args)
+    var server = opts.server ||
+      (opts.key && opts.cert ? https.createServer(opts) : http.createServer())
+
+    var wsServer = new WebSocket.Server({
+      server: server,
+      perMessageDeflate: false,
+      verifyClient: opts.verifyClient
     })
-  }
 
-  var server = opts.server ||
-    (opts.key && opts.cert ? https.createServer(opts) : http.createServer())
+    proxy(server, 'listening')
+    proxy(server, 'request')
+    proxy(server, 'close')
 
-  var wsServer = new WebSocket.Server({
-    server: server,
-    perMessageDeflate: false,
-    verifyClient: opts.verifyClient
-  })
+    wsServer.on('connection', function (socket) {
+      var stream = ws(socket)
+      stream.remoteAddress = socket.upgradeReq.socket.remoteAddress
+      emitter.emit('connection', stream)
+    })
 
-  proxy(server, 'listening')
-  proxy(server, 'request')
-  proxy(server, 'close')
+    emitter.listen = function (addr, onListening) {
+      if(onListening)
+        emitter.once('listening', onListening)
+      server.listen(addr.port || addr)
+      return emitter
+    }
 
-  wsServer.on('connection', function (socket) {
-    var stream = ws(socket)
-    stream.remoteAddress = socket.upgradeReq.socket.remoteAddress
-    emitter.emit('connection', stream)
-  })
+    emitter.close = function (onClose) {
+      server.close(onClose)
+      wsServer.close()
+      return emitter
+    }
 
-  emitter.listen = function (addr, onListening) {
-    if(onListening)
-      emitter.once('listening', onListening)
-    server.listen(addr.port || addr)
+    emitter.address = server.address.bind(server)
     return emitter
   }
 
-  emitter.close = function (onClose) {
-    server.close(onClose)
-    wsServer.close()
-    return emitter
-  }
 
-  emitter.address = server.address.bind(server)
-  return emitter
-}
+
+
 
