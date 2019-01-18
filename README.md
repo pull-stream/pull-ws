@@ -65,7 +65,7 @@ the servers take a lot more options than clients.
 one duplex service you may want to use this with is [muxrpc](https://github.com/dominictarr/muxrpc)
 
 ``` js
-var ws = require('pull-ws-server')
+var ws = require('pull-ws')
 var pull = require('pull-stream')
 
 ws.createServer(function (stream) {
