@@ -4,7 +4,7 @@ Use websockets via pull-stream interface. both client and server.
 
 [![NPM](https://nodei.co/npm/pull-ws.png)](https://nodei.co/npm/pull-ws/)
 
-[![unstable](https://img.shields.io/badge/stability-unstable-yellowgreen.svg)](https://github.com/dominictarr/stability#unstable) [![Build Status](https://img.shields.io/travis/DamonOehlman/pull-ws.svg?branch=master)](https://travis-ci.org/DamonOehlman/pull-ws) 
+[![unstable](https://img.shields.io/badge/stability-unstable-yellowgreen.svg)](https://github.com/dominictarr/stability#unstable) [![Build Status](https://img.shields.io/travis/DamonOehlman/pull-ws.svg?branch=master)](https://travis-ci.org/DamonOehlman/pull-ws)
 
 ## example - client
 ``` js
@@ -214,11 +214,3 @@ also exposed at `require('pull-ws').source`
 # LICENSE
 
 MIT
-
-
-
-
-
-
-
-

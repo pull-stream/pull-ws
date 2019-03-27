@@ -1,42 +1,38 @@
 {
-  "name": "pull-ws",
-  "version": "3.3.2",
-  "description": "Simple pull-streams for websocket client connections",
+  "name": "it-ws",
+  "version": "0.0.0",
+  "description": "Simple async iterables for websocket client connections",
   "main": "index.js",
-  "stability": "unstable",
   "scripts": {
     "test": "tap test/*.js",
     "browser": "testling"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/DamonOehlman/pull-ws.git"
+    "url": "https://github.com/alanshaw/it-ws.git"
   },
   "keywords": [
-    "pull-stream",
+    "async",
+    "iterable",
+    "iterator",
     "websocket",
     "ws"
   ],
-  "author": "Damon Oehlman <damon.oehlman@gmail.com>",
-  "license": "ISC",
+  "author": "Alan Shaw",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/DamonOehlman/pull-ws/issues"
+    "url": "https://github.com/alanshaw/it-ws/issues"
   },
-  "homepage": "https://github.com/DamonOehlman/pull-ws",
+  "homepage": "https://github.com/alanshaw/it-ws",
   "dependencies": {
     "event-iterator": "^1.1.0",
     "relative-url": "^1.0.2",
-    "safe-buffer": "^5.1.1",
+    "safe-buffer": "^5.1.2",
     "ws": "^1.1.0"
   },
   "devDependencies": {
     "iterable-ndjson": "^1.1.0",
     "mapleTree": "^0.5.1",
-    "pull-goodbye": "~0.0.1",
-    "pull-json-doubleline": "^1.0.0",
-    "pull-split": "^0.2.0",
-    "pull-stream": "^3.3.2",
-    "pull-through": "^1.0.18",
     "standard": "^12.0.1",
     "streaming-iterables": "^4.0.2",
     "tap": "^5.7.2",
