@@ -1,31 +1,33 @@
-module.exports = function(socket, callback) {
-  var remove = socket && (socket.removeEventListener || socket.removeListener);
-
-  function cleanup () {
-    if (typeof remove == 'function') {
-      remove.call(socket, 'open', handleOpen);
-      remove.call(socket, 'error', handleErr);
-    }
-  }
-
-  function handleOpen(evt) {
-    cleanup(); callback();
-  }
-
-  function handleErr (evt) {
-    cleanup(); callback(evt);
-  }
-
+module.exports = async socket => {
   // if the socket is closing or closed, return end
   if (socket.readyState >= 2) {
-    return callback(true);
+    throw new Error('socket closed')
   }
 
-  // if open, trigger the callback
+  // if open, return
   if (socket.readyState === 1) {
-    return callback();
+    return
   }
 
-  socket.addEventListener('open', handleOpen);
-  socket.addEventListener('error', handleErr);
-};
+  return new Promise((resolve, reject) => {
+    let remove = socket && (socket.removeEventListener || socket.removeListener)
+
+    function cleanup () {
+      if (typeof remove === 'function') {
+        remove.call(socket, 'open', handleOpen)
+        remove.call(socket, 'error', handleErr)
+      }
+    }
+
+    function handleOpen () {
+      cleanup(); resolve()
+    }
+
+    function handleErr (evt) {
+      cleanup(); reject(evt)
+    }
+
+    socket.addEventListener('open', handleOpen)
+    socket.addEventListener('error', handleErr)
+  })
+}

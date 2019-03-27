@@ -1,46 +1,40 @@
-
 var WS = require('../')
 var tape = require('tape')
-var pull = require('pull-stream')
-var JSONDL = require('pull-json-doubleline')
+const ndjson = require('iterable-ndjson')
+const { pipeline, collect } = require('streaming-iterables')
 
-tape('simple echo server', function (t) {
-
-  var server = WS.createServer(function (stream) {
-    pull(stream, stream)
-  }).listen(5678, function () {
-
-    WS.connect('ws://localhost:5678', function (err, stream) {
-      pull(
-        pull.values([1,2,3]),
-        //need a delay, because otherwise ws hangs up wrong.
-        //otherwise use pull-goodbye.
-        function (read) {
-          return function (err, cb) {
-            setTimeout(function () {
-              read(null, cb)
-            }, 10)
-          }
-        },
-        JSONDL.stringify(),
-        stream,
-        JSONDL.parse(),
-        pull.collect(function (err, ary) {
-          if(err) throw err
-          t.deepEqual(ary, [1,2,3])
-          server.close(function () {
-            t.end()
-          })
-        })
-      )
-    })
+tape('simple echo server', async t => {
+  const server = WS.createServer(async stream => {
+    await pipeline(
+      () => stream[Symbol.asyncIterator](),
+      stream
+    )
   })
+
+  await server.listen(5678)
+
+  const stream = await WS.connect('ws://localhost:5678')
+
+  const ary = await pipeline(
+    () => [1, 2, 3],
+    // need a delay, because otherwise ws hangs up wrong.
+    // otherwise use pull-goodbye.
+    source => (async function * () {
+      for await (const val of source) {
+        yield new Promise(resolve => setTimeout(() => resolve(val), 10))
+      }
+    })(),
+    ndjson.stringify,
+    source => {
+      stream(source)
+      return stream[Symbol.asyncIterator]()
+    },
+    ndjson.parse,
+    collect
+  )
+
+  await server.close()
+
+  t.deepEqual(ary, [1, 2, 3])
+  t.end()
 })
-
-
-
-
-
-
-
-

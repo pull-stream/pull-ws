@@ -1,54 +1,34 @@
-var ready = require('./ready');
+const ready = require('./ready')
 
-/**
-  ### `sink(socket, opts?)`
+module.exports = (socket, options) => {
+  options = options || {}
+  options.closeOnEnd = options.closeOnEnd !== false
 
-  Create a pull-stream `Sink` that will write data to the `socket`.
-
-  <<< examples/write.js
-
-**/
-
-var nextTick = typeof setImmediate !== 'undefined' ? setImmediate : process.nextTick
-
-module.exports = function(socket, opts) {
-  return function (read) {
-    opts = opts || {}
-    var closeOnEnd = opts.closeOnEnd !== false;
-    var onClose = 'function' === typeof opts ? opts : opts.onClose;
-
-    function next(end, data) {
-      // if the stream has ended, simply return
-      if (end) {
-        if (closeOnEnd && socket.readyState <= 1) {
-          if(onClose)
-            socket.addEventListener('close', function (ev) {
-              if(ev.wasClean || ev.code === 1006) onClose()
-              else {
-                var err = new Error('ws error')
-                err.event = ev
-                onClose(err)
-              }
-            });
-
-          socket.close()
-        }
-
-        return;
+  return async source => {
+    for await (const data of source) {
+      try {
+        await ready(socket)
+      } catch (err) {
+        if (err.message === 'socket closed') break
+        throw err
       }
 
-      // socket ready?
-      ready(socket, function(end) {
-        if (end) {
-          return read(end, function () {});
-        }
-        socket.send(data);
-        nextTick(function() {
-          read(null, next);
-        });
-      });
+      socket.send(data)
     }
 
-    read(null, next);
+    if (options.closeOnEnd && socket.readyState <= 1) {
+      return new Promise((resolve, reject) => {
+        socket.addEventListener('close', event => {
+          if (event.wasClean || event.code === 1006) {
+            resolve()
+          } else {
+            const err = Object.assign(new Error('ws error'), { event })
+            reject(err)
+          }
+        })
+
+        setTimeout(() => socket.close())
+      })
+    }
   }
 }
