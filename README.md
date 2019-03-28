@@ -1,68 +1,77 @@
-# pull-ws
+# it-ws
 
-Use websockets via pull-stream interface. both client and server.
+[![Build Status](https://img.shields.io/travis/alanshaw/it-ws.svg?branch=master)](https://travis-ci.org/alanshaw/it-ws)
+[![dependencies Status](https://david-dm.org/alanshaw/it-ws/status.svg)](https://david-dm.org/alanshaw/it-ws)
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
-[![NPM](https://nodei.co/npm/pull-ws.png)](https://nodei.co/npm/pull-ws/)
+> Use websockets via async iterables, both client and server.
 
-[![unstable](https://img.shields.io/badge/stability-unstable-yellowgreen.svg)](https://github.com/dominictarr/stability#unstable) [![Build Status](https://img.shields.io/travis/DamonOehlman/pull-ws.svg?branch=master)](https://travis-ci.org/DamonOehlman/pull-ws)
+## Install
 
-## example - client
-``` js
-var connect = require('pull-ws/client')
-// OR: require('pull-ws').connect
-
-connect(WS_URL, function (err, stream) {
-  if(err) throw err //handle err
-  pull(source, stream, sink)
-})
-
+```sh
+npm i it-ws
 ```
-## example - server
 
-``` js
-var createServer = require('pull-ws/server')
-createServer(function (stream) {
+## Usage
+
+### Example - client
+
+```js
+const connect = require('it-ws/client') // OR: require('it-ws').connect
+const { pipeline } = require('streaming-iterables')
+
+const stream = connect(WS_URL)
+
+pipeline(() => source, stream.sink)
+pipeline(() => stream.source, sink)
+```
+
+### Example - server
+
+```js
+const createServer = require('it-ws/server')
+
+const server = createServer(stream => {
   //pipe the stream somewhere.
   //eg, echo server
-  pull(stream, stream)
-}).listen(PORT)
-```
-
-## api
-
-### `connect = require('pull-ws/client')`
-
-`connect(url, cb | {binary: boolean, onConnect: cb})`
-
-Create a websocket client connection. set binary: true
-to get a stream of arrayBuffers (on the browser).
-defaults to true on node, but to strings on the browser.
-this may cause a problems if your application assumes binary.
-
-else, just provide the callback.
-
-``` js
-connect(url, function (err, stream) {
-  ...
+  pipeline(() => stream.source, stream.sink)
 })
+
+await server.listen(PORT)
 ```
 
+## API
 
-### `createServer = require('pull-ws/server')`
+### `connect = require('it-ws/client')`
 
-create pull stream websocket servers.
-the servers take a lot more options than clients.
+`connect(url, { binary: boolean })`
 
-`createServer(opts?, onConnection)`
+Create a websocket client connection. Set `binary: true` to get a stream of arrayBuffers (on the browser). Defaults to true on node, but to strings on the browser. This may cause a problems if your application assumes binary.
+
+```js
+const stream = connect(url)
+// stream is duplex and is both a `source` and `sink`.
+// See this for more information:
+// https://gist.github.com/alanshaw/591dc7dd54e4f99338a347ef568d6ee9#duplex-it
+```
+
+### `createServer = require('it-ws/server')`
+
+Create async iterable websocket servers.
+
+`createServer(options?, onConnection)`
+
+`options` takes the same server options as [ws module](https://github.com/websockets/ws/blob/master/doc/ws.md#new-wsserveroptions-callback)
 
 `onConnection(stream)` is called every time a connection is received.
 
-`opts` takes the same server options as [ws module](https://github.com/websockets/ws/blob/master/doc/ws.md#new-wsserveroptions-callback)
+# TODO convert the following docs:
 
+---
 
-#### example
+#### Example
 
-one duplex service you may want to use this with is [muxrpc](https://github.com/dominictarr/muxrpc)
+One duplex service you may want to use this with is [muxrpc](https://github.com/dominictarr/muxrpc)
 
 ``` js
 var ws = require('pull-ws')
@@ -211,6 +220,6 @@ pull(
 
 also exposed at `require('pull-ws').source`
 
-# LICENSE
+## License
 
 MIT
