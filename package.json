@@ -41,9 +41,5 @@
   "browser": {
     "ws": false,
     "./server": false
-  },
-  "testling": {
-    "files": "test/all.js",
-    "server": "test/server.js"
   }
 }
