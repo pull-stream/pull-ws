@@ -18,9 +18,7 @@ module.exports = function (addr, opts) {
     socket.close()
   })
 
-  return new Promise(resolve => {
-    socket.addEventListener('open', () => resolve(stream))
-  })
+  return stream
 }
 
 module.exports.connect = module.exports

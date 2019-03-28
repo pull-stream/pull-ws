@@ -22,7 +22,8 @@ module.exports = socket => {
         remove.call(socket, 'message', push)
         remove.call(socket, 'error', fail)
         remove.call(socket, 'close', stop)
-      }
+      },
+      { highWaterMark: Infinity }
     )
 
     for await (let { data } of messages) {

@@ -55,7 +55,7 @@ the servers take a lot more options than clients.
 
 `createServer(opts?, onConnection)`
 
-`onConnect(stream)` is called every time a connection is received.
+`onConnection(stream)` is called every time a connection is received.
 
 `opts` takes the same server options as [ws module](https://github.com/websockets/ws/blob/master/doc/ws.md#new-wsserveroptions-callback)
 

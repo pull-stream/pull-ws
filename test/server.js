@@ -21,7 +21,6 @@ module.exports = function () {
 
   router.define('/echo', function (ws) {
     ws.on('message', function (data) {
-      console.log('received message: ', data)
       ws.send(data)
     })
   })

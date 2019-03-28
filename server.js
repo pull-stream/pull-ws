@@ -46,7 +46,7 @@ module.exports = !WebSocket.Server ? null : function (opts, onConnection) {
 
   emitter.listen = function (addr) {
     return new Promise(resolve => {
-      emitter.once('listening', resolve)
+      emitter.once('listening', () => resolve(emitter))
       server.listen(addr.port || addr)
     })
   }

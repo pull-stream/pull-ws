@@ -11,12 +11,13 @@ module.exports = (socket, options) => {
     socket.binaryType = 'arraybuffer'
   }
 
-  return Object.assign(sink(socket, options), {
-    [Symbol.asyncIterator]: () => source(socket, options),
+  return {
+    sink: sink(socket, options),
+    source: source(socket, options),
     // http properties - useful for routing or auth.
     headers: req.headers,
     url: req.url,
     upgrade: req.upgrade,
     method: req.method
-  })
+  }
 }

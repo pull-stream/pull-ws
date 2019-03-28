@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/alanshaw/it-ws",
   "dependencies": {
-    "event-iterator": "^1.1.0",
+    "event-iterator": "^1.2.0",
     "relative-url": "^1.0.2",
     "safe-buffer": "^5.1.2",
     "ws": "^1.1.0"
