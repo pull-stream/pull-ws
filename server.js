@@ -38,10 +38,10 @@ module.exports = !WebSocket.Server ? null : function (opts, onConnection) {
   proxy(server, 'request')
   proxy(server, 'close')
 
-  wsServer.on('connection', function (socket) {
+  wsServer.on('connection', function (socket, req) {
     var stream = ws(socket)
-    stream.remoteAddress = socket.upgradeReq.socket.remoteAddress
-    emitter.emit('connection', stream)
+    stream.remoteAddress = req.socket.remoteAddress
+    emitter.emit('connection', stream, req)
   })
 
   emitter.listen = function (addr) {
