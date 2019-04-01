@@ -50,7 +50,16 @@ test('test error', async function (t) {
   }
 })
 
-test('test error', async function (t) {
+test('test connection error awaiting connected', async function (t) {
+  try {
+    await ws(new WebSocket('ws://localhost:34897/' + Math.random())).connected()
+  } catch (err) {
+    t.ok(err.message.includes('ECONNREFUSED'))
+    t.end()
+  }
+})
+
+test('test connection error in stream', async function (t) {
   try {
     await pipeline(
       () => ws(new WebSocket('ws://localhost:34897/' + Math.random())).source,

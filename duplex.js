@@ -10,8 +10,11 @@ module.exports = (socket, options) => {
     socket.binaryType = 'arraybuffer'
   }
 
-  return {
+  const duplex = {
     sink: sink(socket, options),
-    source: source(socket, options)
+    source: source(socket, options),
+    connected: () => duplex.source.connected()
   }
+
+  return duplex
 }

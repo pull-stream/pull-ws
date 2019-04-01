@@ -22,6 +22,8 @@ const { pipeline } = require('streaming-iterables')
 
 const stream = connect(WS_URL)
 
+await stream.connected() // Wait for websocket to be connected (optional)
+
 pipeline(() => source, stream.sink)
 pipeline(() => stream.source, sink)
 ```

@@ -10,7 +10,9 @@ function isArrayBuffer (obj) {
 }
 
 module.exports = socket => {
-  return (async function * () {
+  const removeListener = socket.removeEventListener || socket.removeListener
+
+  const source = (async function * () {
     const messages = new EventIterator(
       (push, stop, fail) => {
         socket.addEventListener('message', push)
@@ -18,10 +20,9 @@ module.exports = socket => {
         socket.addEventListener('close', stop)
       },
       (push, stop, fail) => {
-        const remove = socket.removeEventListener || socket.removeListener
-        remove.call(socket, 'message', push)
-        remove.call(socket, 'error', fail)
-        remove.call(socket, 'close', stop)
+        removeListener.call(socket, 'message', push)
+        removeListener.call(socket, 'error', fail)
+        removeListener.call(socket, 'close', stop)
       },
       { highWaterMark: Infinity }
     )
@@ -30,4 +31,40 @@ module.exports = socket => {
       yield isArrayBuffer(data) ? Buffer.from(data) : data
     }
   })()
+
+  let connected = socket.readyState === 1
+  let connError
+
+  socket.addEventListener('open', () => {
+    connected = true
+    connError = null
+  })
+
+  socket.addEventListener('close', () => {
+    connected = false
+    connError = null
+  })
+
+  socket.addEventListener('error', err => {
+    if (!connected) connError = err
+  })
+
+  source.connected = () => new Promise((resolve, reject) => {
+    if (connected) return resolve()
+    if (connError) return reject(connError)
+
+    const cleanUp = cont => {
+      removeListener.call(socket, 'open', onOpen)
+      removeListener.call(socket, 'error', onError)
+      cont()
+    }
+
+    const onOpen = () => cleanUp(resolve)
+    const onError = err => cleanUp(() => reject(err))
+
+    socket.addEventListener('open', onOpen)
+    socket.addEventListener('error', onError)
+  })
+
+  return source
 }
