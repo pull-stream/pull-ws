@@ -1,6 +1,7 @@
 var test = require('tape')
 var WebSocket = require('ws')
-const { pipeline, getIterator, consume } = require('streaming-iterables')
+const { consume } = require('streaming-iterables')
+const pipe = require('it-pipe')
 var ws = require('../')
 
 var server = require('./server')()
@@ -8,39 +9,33 @@ var server = require('./server')()
 // connect to a server that does not exist, and check that it errors.
 // should pass the error to both sides of the stream.
 test('test error', async function (t) {
+  let _err
   try {
-    await pipeline(
-      () => ['x', 'y', 'z'],
-      // TODO: AS 2019-03-28 - is this actually what `pull` does? should this be
-      // in a `pipeline` function?
+    await pipe(
+      ['x', 'y', 'z'],
       source => {
         const stream = ws(new WebSocket('ws://localhost:34897/' + Math.random()))
-
-        const dSinkAbort = (async function * () {
-          for await (const val of source) yield val
-        })()
-
-        const dSink = pipeline(() => dSinkAbort, stream.sink)
-
-        dSink.catch(err => {
-          if (dSource.throw) {
-            return Promise.resolve(dSource.throw(err)).catch(_ => {})
+        stream.sink(source).catch(err => {
+          if (_err) {
+            t.strictEqual(err.message, _err.message)
+            t.end()
           }
-          throw err
+          _err = err
         })
-
-        const dSource = (async function * () {
+        return stream.source
+      },
+      source => {
+        return (async function * () {
           try {
-            for await (const val of stream.source) yield val
+            for await (const val of source) yield val
           } catch (err) {
-            if (dSinkAbort.throw) {
-              await dSinkAbort.throw(err)
+            if (_err) {
+              t.strictEqual(err.message, _err.message)
+              t.end()
             }
-            throw err
+            _err = err
           }
         })()
-
-        return dSource
       },
       consume
     )
@@ -61,8 +56,8 @@ test('test connection error awaiting connected', async function (t) {
 
 test('test connection error in stream', async function (t) {
   try {
-    await pipeline(
-      () => ws(new WebSocket('ws://localhost:34897/' + Math.random())).source,
+    await pipe(
+      ws(new WebSocket('ws://localhost:34897/' + Math.random())).source,
       consume
     )
   } catch (err) {

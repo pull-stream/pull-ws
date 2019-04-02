@@ -1,6 +1,7 @@
 var test = require('tape')
 var WebSocket = require('ws')
-const { pipeline, collect } = require('streaming-iterables')
+const { collect } = require('streaming-iterables')
+const pipe = require('it-pipe')
 var endpoint = require('./helpers/wsurl') + '/read'
 var ws = require('../source')
 var socket
@@ -16,23 +17,14 @@ test('create a websocket connection to the server', function (t) {
 
 test('read values from the socket and end normally', async function (t) {
   t.plan(1)
-
-  const values = await pipeline(
-    () => ws(socket),
-    collect
-  )
-
+  const values = await pipe(ws(socket), collect)
   t.deepEqual(values, ['a', 'b', 'c', 'd'])
 })
 
 test('read values from a new socket and end normally', async function (t) {
   t.plan(1)
 
-  const values = await pipeline(
-    () => ws(new WebSocket(endpoint)),
-    collect
-  )
-
+  const values = await pipe(ws(new WebSocket(endpoint)), collect)
   t.deepEqual(values, ['a', 'b', 'c', 'd'])
 })
 

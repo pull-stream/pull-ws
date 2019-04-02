@@ -1,4 +1,5 @@
-const { pipeline, map, tap, consume } = require('streaming-iterables')
+const { map, tap, consume } = require('streaming-iterables')
+const pipe = require('it-pipe')
 
 var WS = require('../')
 
@@ -7,8 +8,8 @@ async function main () {
 
   var server = await WS.createServer(async function (stream) {
     var N = 0
-    await pipeline(
-      () => stream.source,
+    await pipe(
+      stream.source,
       tap(val => {
         if (!(N % 1000)) console.log(N)
         N++
@@ -19,8 +20,8 @@ async function main () {
     server.close()
   }).listen(2134)
 
-  pipeline(
-    () => Array.from(Array(10000), (_, i) => i),
+  pipe(
+    Array.from(Array(10000), (_, i) => i),
     map(n => '?'),
     WS.connect('ws://localhost:2134').sink
   )

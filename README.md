@@ -18,25 +18,25 @@ npm i it-ws
 
 ```js
 const connect = require('it-ws/client') // OR: require('it-ws').connect
-const { pipeline } = require('streaming-iterables')
+const pipe = require('it-pipe')
 
 const stream = connect(WS_URL)
 
 await stream.connected() // Wait for websocket to be connected (optional)
 
-pipeline(() => source, stream.sink)
-pipeline(() => stream.source, sink)
+pipe(source, stream, sink)
 ```
 
 ### Example - server
 
 ```js
 const createServer = require('it-ws/server')
+const pipe = require('it-pipe')
 
 const server = createServer(stream => {
   //pipe the stream somewhere.
   //eg, echo server
-  pipeline(() => stream.source, stream.sink)
+  pipe(stream, stream)
 })
 
 await server.listen(PORT)

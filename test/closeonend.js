@@ -1,6 +1,7 @@
 var test = require('tape')
 var WebSocket = require('ws')
-const { pipeline, tap, consume } = require('streaming-iterables')
+const { tap, consume } = require('streaming-iterables')
+const pipe = require('it-pipe')
 var endpoint = require('./helpers/wsurl') + '/echo'
 var ws = require('..')
 
@@ -9,13 +10,13 @@ var server = require('./server')()
 test('websocket closed when pull source input ends', function (t) {
   var socket = new WebSocket(endpoint)
 
-  pipeline(() => ws.source(socket), consume).then(() => {
+  pipe(ws.source(socket), consume).then(() => {
     t.end()
   })
 
-  pipeline(
-    () => ['x', 'y', 'z'],
-    ws.sink(socket, { closeOnEnd: true })
+  pipe(
+    ['x', 'y', 'z'],
+    ws(socket, { closeOnEnd: true })
   )
 })
 
@@ -23,17 +24,17 @@ test('closeOnEnd=false, stream doesn\'t close', function (t) {
   var socket = new WebSocket(endpoint)
 
   t.plan(3)
-  pipeline(
-    () => ws.source(socket),
+  pipe(
+    ws.source(socket),
     tap(function (item) {
       t.ok(item)
     }),
     consume
   )
 
-  pipeline(
-    () => ['x', 'y', 'z'],
-    ws.sink(socket, { closeOnEnd: false })
+  pipe(
+    ['x', 'y', 'z'],
+    ws(socket, { closeOnEnd: false })
   )
 })
 

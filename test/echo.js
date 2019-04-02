@@ -2,7 +2,9 @@ var test = require('tape')
 var WebSocket = require('ws')
 var ws = require('..')
 var url = require('./helpers/wsurl') + '/echo'
-const { pipeline, tap, consume } = require('streaming-iterables')
+const { tap, consume } = require('streaming-iterables')
+const pipe = require('it-pipe')
+const goodbye = require('it-goodbye')
 
 var server = require('./server')()
 
@@ -12,8 +14,8 @@ test('setup echo reading and writing', function (t) {
 
   t.plan(expected.length)
 
-  pipeline(
-    () => ws.source(socket),
+  pipe(
+    ws.source(socket),
     tap(function (value) {
       console.log(value)
       t.equal(value, expected.shift())
@@ -21,8 +23,8 @@ test('setup echo reading and writing', function (t) {
     consume
   )
 
-  pipeline(
-    () => [].concat(expected),
+  pipe(
+    [].concat(expected),
     ws.sink(socket, { closeOnEnd: false })
   )
 })
@@ -33,13 +35,9 @@ test('duplex style', function (t) {
 
   t.plan(expected.length)
 
-  pipeline(
-    () => [].concat(expected),
-    source => {
-      const stream = ws(socket, { closeOnEnd: false })
-      stream.sink(source)
-      return stream.source
-    },
+  pipe(
+    [].concat(expected),
+    ws(socket, { closeOnEnd: false }),
     tap(function (value) {
       console.log('echo:', value)
       t.equal(value, expected.shift())
@@ -48,25 +46,26 @@ test('duplex style', function (t) {
   )
 })
 
-test.skip('duplex with goodbye handshake', function (t) {
+test('duplex with goodbye handshake', async function (t) {
   var expected = ['x', 'y', 'z']
   var socket = new WebSocket(url)
 
   var pws = ws(socket)
 
-  pipeline(
-    () => getIterator(pws),
+  await pipe(
+    pws,
     goodbye({
-      source: pull.values([].concat(expected)),
-      sink: pull.drain(function(value) {
-        t.equal(value, expected.shift())
-      }, function (err) {
-        t.equal(expected.length, 0)
-        t.end()
-      })
+      source: [].concat(expected),
+      sink: source => pipe(
+        source,
+        tap(value => t.equal(value, expected.shift())),
+        consume
+      )
     }),
     pws
   )
+
+  t.end()
 })
 
 test('close', function (t) {
