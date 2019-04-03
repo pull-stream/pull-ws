@@ -58,7 +58,7 @@ test('duplex with goodbye handshake', async function (t) {
       source: [].concat(expected),
       sink: source => pipe(
         source,
-        tap(value => t.equal(value, expected.shift())),
+        tap(value => t.equal(value.toString(), expected.shift())),
         consume
       )
     }),

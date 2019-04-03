@@ -30,7 +30,7 @@
     "ws": "^6.2.1"
   },
   "devDependencies": {
-    "it-goodbye": "^1.0.0",
+    "it-goodbye": "^2.0.0",
     "it-pipe": "^1.0.0",
     "iterable-ndjson": "^1.1.0",
     "mapleTree": "^0.5.1",
