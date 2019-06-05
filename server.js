@@ -1,6 +1,5 @@
 var ws = require('./')
 var WebSocket = require('ws')
-var url = require('url')
 var http = require('http')
 var https = require('https')
 
@@ -25,7 +24,7 @@ module.exports = !WebSocket.Server ? null : function (opts, onConnection) {
       })
     }
 
-    var server = opts.server ||
+    server = opts.server ||
       (opts.key && opts.cert ? https.createServer(opts) : http.createServer())
 
     var wsServer = new WebSocket.Server({
@@ -38,9 +37,9 @@ module.exports = !WebSocket.Server ? null : function (opts, onConnection) {
     proxy(server, 'request')
     proxy(server, 'close')
 
-    wsServer.on('connection', function (socket) {
+    wsServer.on('connection', function (socket, req) {
       var stream = ws(socket)
-      stream.remoteAddress = socket.upgradeReq.socket.remoteAddress
+      stream.remoteAddress = req.connection.remoteAddress
       emitter.emit('connection', stream)
     })
 
@@ -60,8 +59,3 @@ module.exports = !WebSocket.Server ? null : function (opts, onConnection) {
     emitter.address = server.address.bind(server)
     return emitter
   }
-
-
-
-
-

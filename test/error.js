@@ -1,6 +1,5 @@
 var test = require('tape');
 var WebSocket = require('ws');
-var endpoint = require('./helpers/wsurl') + '/read';
 var pull = require('pull-stream');
 var ws = require('../');
 
@@ -14,7 +13,7 @@ test('test error', function (t) {
     pull.values(['x', 'y', 'z']),
     pull.through(null, function (err) {
       if(_err) {
-        t.strictEqual(err, _err);
+        t.deepEqual(err, _err);
         t.end();
       }
       _err = err
@@ -22,13 +21,12 @@ test('test error', function (t) {
     ws(new WebSocket('ws://localhost:34897/' + Math.random())),
     pull.collect(function (err) {
       if(_err) {
-        t.strictEqual(err, _err);
+        t.deepEqual(err, _err);
         t.end();
       }
       _err = err
     })
   )
-
 })
 
 //connect to a server that does not exist, and check that it errors.
@@ -43,7 +41,6 @@ test('test error', function (t) {
     }})
 
 })
-
 
 test('close', function (t) {
   server.close()
