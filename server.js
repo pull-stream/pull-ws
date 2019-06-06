@@ -1,3 +1,4 @@
+'use strict'
 var ws = require('./')
 var WebSocket = require('ws')
 var http = require('http')

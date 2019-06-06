@@ -1,3 +1,4 @@
+'use strict'
 module.exports = function(socket, callback) {
   var remove = socket && (socket.removeEventListener || socket.removeListener);
 
