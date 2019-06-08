@@ -39,6 +39,7 @@ module.exports = !WebSocket.Server ? null : function (opts, onConnection) {
     proxy(server, 'close')
 
     wsServer.on('connection', function (socket, req) {
+      socket.upgradeReq = req // mix: kinda gross hack to preserve the API of duplex.js, but might confuse users...
       var stream = ws(socket)
       stream.remoteAddress = req.connection.remoteAddress
       emitter.emit('connection', stream)
