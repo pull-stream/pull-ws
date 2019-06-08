@@ -1,3 +1,4 @@
+'use strict'
 var ready = require('./ready');
 
 /**
@@ -40,7 +41,7 @@ module.exports = function(socket, opts) {
       // socket ready?
       ready(socket, function(end) {
         if (end) {
-          return read(end, function () {});
+          return read(end === true ? true : end.error, function () {});
         }
         socket.send(data);
         nextTick(function() {

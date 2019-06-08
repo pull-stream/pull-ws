@@ -3,8 +3,8 @@ var mapleTree = require('mapleTree');
 var port = process.env.ZUUL_PORT || process.env.PORT || 3000;
 
 module.exports = function () {
-var router = new mapleTree.RouteTree();
-var wss = new WebSocketServer({ port: port });
+  var router = new mapleTree.RouteTree();
+  var wss = new WebSocketServer({ port: port });
 
   router.define('/read', function(ws) {
     var values = ['a', 'b', 'c', 'd'];
@@ -27,8 +27,8 @@ var wss = new WebSocketServer({ port: port });
     });
   });
 
-  wss.on('connection', function(ws) {
-    var match = router.match(ws.upgradeReq.url);
+  wss.on('connection', function(ws, req) {
+    var match = router.match(req.url);
     if (match && typeof match.fn == 'function') {
       match.fn(ws);
     }

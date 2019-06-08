@@ -1,3 +1,4 @@
+'use strict'
 /**
   ### `source(socket)`
 
@@ -46,10 +47,10 @@ module.exports = function(socket, cb) {
     ended = evt;
     if(!started) {
       started = true
-      cb && cb(evt)
+      cb && cb(evt.error)
     }
     if (receiver) {
-      receiver(ended)
+      receiver(ended.error)
     }
   });
 
