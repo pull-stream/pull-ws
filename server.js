@@ -1,13 +1,11 @@
 var ws = require('./')
 var WebSocket = require('ws')
-var url = require('url')
 var http = require('http')
 var https = require('https')
 
 var EventEmitter = require('events').EventEmitter
 module.exports = !WebSocket.Server ? null : function (opts, onConnection) {
     var emitter = new EventEmitter()
-    var server
     if (typeof opts === 'function'){
       onConnection = opts
       opts = null

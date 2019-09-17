@@ -24,11 +24,6 @@ tape('map from a relative url to one for this domain', function (t) {
 })
 
 tape('same path works on dev and deployed', function (t) {
-  var location = {
-    protocol: 'http',
-    host: 'localhost:8000',
-  }
-
   t.equal(
     wsurl('/', {
       protocol: 'http',

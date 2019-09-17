@@ -19,5 +19,5 @@ function duplex (ws, opts) {
     upgrade: req.upgrade,
     method: req.method
   };
-};
+}
 

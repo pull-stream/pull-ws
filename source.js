@@ -80,7 +80,7 @@ module.exports = function(socket, cb) {
     else
       receiver = cb;
 
-  };
+  }
 
   return read;
 };
