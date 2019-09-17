@@ -27,8 +27,8 @@ var wss = new WebSocketServer({ port: port });
     });
   });
 
-  wss.on('connection', function(ws) {
-    var match = router.match(ws.upgradeReq.url);
+  wss.on('connection', function(ws, req) {
+    var match = router.match(req.url);
     if (match && typeof match.fn == 'function') {
       match.fn(ws);
     }

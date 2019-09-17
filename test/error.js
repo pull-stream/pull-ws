@@ -14,7 +14,7 @@ test('test error', function (t) {
     pull.values(['x', 'y', 'z']),
     pull.through(null, function (err) {
       if(_err) {
-        t.strictEqual(err, _err);
+        t.strictEqual(err.error, _err.error);
         t.end();
       }
       _err = err
