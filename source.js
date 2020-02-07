@@ -1,4 +1,4 @@
-const { Buffer } = require('safe-buffer')
+const { Buffer } = require('buffer')
 const { EventIterator } = require('event-iterator')
 
 // copied from github.com/feross/buffer
@@ -27,7 +27,7 @@ module.exports = socket => {
       { highWaterMark: Infinity }
     )
 
-    for await (let { data } of messages) {
+    for await (const { data } of messages) {
       yield isArrayBuffer(data) ? Buffer.from(data) : data
     }
   })()

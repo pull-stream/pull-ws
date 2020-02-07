@@ -10,7 +10,7 @@ module.exports = async socket => {
   }
 
   return new Promise((resolve, reject) => {
-    let remove = socket && (socket.removeEventListener || socket.removeListener)
+    const remove = socket && (socket.removeEventListener || socket.removeListener)
 
     function cleanup () {
       if (typeof remove === 'function') {

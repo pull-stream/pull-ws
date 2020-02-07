@@ -4,7 +4,7 @@
   "description": "Simple async iterables for websocket client connections",
   "main": "index.js",
   "scripts": {
-    "test": "tap test/*.js"
+    "test": "tap --jobs=1 test/*.js"
   },
   "repository": {
     "type": "git",
@@ -24,19 +24,19 @@
   },
   "homepage": "https://github.com/alanshaw/it-ws",
   "dependencies": {
+    "buffer": "^5.4.3",
     "event-iterator": "^1.2.0",
     "relative-url": "^1.0.2",
-    "safe-buffer": "^5.1.2",
-    "ws": "^6.2.1"
+    "ws": "^7.2.1"
   },
   "devDependencies": {
     "it-goodbye": "^2.0.0",
     "it-pipe": "^1.0.0",
     "iterable-ndjson": "^1.1.0",
     "mapleTree": "^0.5.1",
-    "standard": "^12.0.1",
+    "standard": "^14.3.1",
     "streaming-iterables": "^4.0.2",
-    "tap": "^12.6.1",
+    "tap": "^14.10.6",
     "tape": "^4.4.0",
     "wsurl": "^1.0.0"
   },

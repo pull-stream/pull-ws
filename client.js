@@ -5,11 +5,11 @@ var WebSocket = require('./web-socket')
 var duplex = require('./duplex')
 var wsurl = require('./ws-url')
 
-module.exports = function (addr, opts) {
+module.exports = function (addr, opts = {}) {
   const location = typeof window === 'undefined' ? {} : window.location
 
   const url = wsurl(addr, location)
-  const socket = new WebSocket(url)
+  const socket = new WebSocket(url, opts.websocket)
 
   const stream = duplex(socket, opts)
   stream.remoteAddress = url
@@ -17,6 +17,10 @@ module.exports = function (addr, opts) {
     socket.addEventListener('close', resolve)
     socket.close()
   })
+  stream.destroy = () => {
+    socket.terminate()
+  }
+  stream.socket = socket
 
   return stream
 }

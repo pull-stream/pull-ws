@@ -50,6 +50,8 @@ await server.listen(PORT)
 
 Create a websocket client connection. Set `binary: true` to get a stream of arrayBuffers (on the browser). Defaults to true on node, but to strings on the browser. This may cause a problems if your application assumes binary.
 
+For adding options to the Websocket instance, as [websockets/ws/blob/master/doc/ws.md#new-websocketaddress-protocols-options](https://github.com/websockets/ws/blob/master/doc/ws.md#new-websocketaddress-protocols-options), you can provide an object with the `websocket` property into the connect options.
+
 ```js
 const stream = connect(url)
 // stream is duplex and is both a `source` and `sink`.
