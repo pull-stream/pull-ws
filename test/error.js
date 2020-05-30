@@ -14,7 +14,7 @@ test('test error', function (t) {
     pull.values(['x', 'y', 'z']),
     pull.through(null, function (err) {
       if(_err) {
-        t.strictEqual(err, _err);
+        t.deepEqual(err, _err);
         t.end();
       }
       _err = err
@@ -22,7 +22,7 @@ test('test error', function (t) {
     ws(new WebSocket('ws://localhost:34897/' + Math.random())),
     pull.collect(function (err) {
       if(_err) {
-        t.strictEqual(err, _err);
+        t.deepEqual(err, _err);
         t.end();
       }
       _err = err

@@ -38,9 +38,9 @@ module.exports = !WebSocket.Server ? null : function (opts, onConnection) {
     proxy(server, 'request')
     proxy(server, 'close')
 
-    wsServer.on('connection', function (socket) {
+    wsServer.on('connection', function (socket, request) {
       var stream = ws(socket)
-      stream.remoteAddress = socket.upgradeReq.socket.remoteAddress
+      stream.remoteAddress = request.socket.remoteAddress
       emitter.emit('connection', stream)
     })
 
