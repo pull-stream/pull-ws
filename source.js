@@ -14,15 +14,16 @@ module.exports = socket => {
 
   const source = (async function * () {
     const messages = new EventIterator(
-      (push, stop, fail) => {
+      ({ push, stop, fail }) => {
         socket.addEventListener('message', push)
         socket.addEventListener('error', fail)
         socket.addEventListener('close', stop)
-      },
-      (push, stop, fail) => {
-        removeListener.call(socket, 'message', push)
-        removeListener.call(socket, 'error', fail)
-        removeListener.call(socket, 'close', stop)
+
+        return () => {
+          removeListener.call(socket, 'message', push)
+          removeListener.call(socket, 'error', fail)
+          removeListener.call(socket, 'close', stop)
+        }
       },
       { highWaterMark: Infinity }
     )
