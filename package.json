@@ -4,7 +4,8 @@
   "description": "Simple async iterables for websocket client connections",
   "main": "index.js",
   "scripts": {
-    "test": "tap --jobs=1 test/*.js"
+    "test": "tap --jobs=1 test/*.js",
+    "lint": "standard"
   },
   "repository": {
     "type": "git",

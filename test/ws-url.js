@@ -2,7 +2,6 @@ var tape = require('tape')
 
 var wsurl = require('../ws-url')
 
-
 tape('map from a relative url to one for this domain', function (t) {
   var location = {
     protocol: 'http',
@@ -24,22 +23,17 @@ tape('map from a relative url to one for this domain', function (t) {
 })
 
 tape('same path works on dev and deployed', function (t) {
-  var location = {
-    protocol: 'http',
-    host: 'localhost:8000',
-  }
-
   t.equal(
     wsurl('/', {
       protocol: 'http',
-      host: 'localhost:8000',
+      host: 'localhost:8000'
     }),
     'ws://localhost:8000/'
   )
   t.equal(
     wsurl('/', {
       protocol: 'http',
-      host: 'server.com:8000',
+      host: 'server.com:8000'
     }),
     'ws://server.com:8000/'
   )
@@ -51,18 +45,16 @@ tape('universal url still works', function (t) {
   t.equal(
     wsurl('ws://what.com/okay', {
       protocol: 'http',
-      host: 'localhost:8000',
+      host: 'localhost:8000'
     }),
     'ws://what.com/okay'
   )
   t.equal(
     wsurl('wss://localhost/', {
       protocol: 'https',
-      host: 'localhost:8000',
+      host: 'localhost:8000'
     }),
     'wss://localhost/'
   )
   t.end()
 })
-
-
