@@ -35,9 +35,9 @@
     "iterable-ndjson": "^1.1.0",
     "mapleTree": "^0.5.1",
     "standard": "^14.3.1",
-    "streaming-iterables": "^4.0.2",
+    "streaming-iterables": "^5.0.2",
     "tap": "^14.10.6",
-    "tape": "^4.4.0",
+    "tape": "^5.0.1",
     "wsurl": "^1.0.0"
   },
   "browser": {
