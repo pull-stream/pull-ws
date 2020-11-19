@@ -21,10 +21,14 @@ module.exports = function(socket, cb) {
   var receiver;
   var ended;
   var started = false;
-  socket.addEventListener('message', function(evt) {
+  socket.addEventListener('message', async function(evt) {
     var data = evt.data;
     if (isArrayBuffer(data)) {
       data = Buffer.from(data);
+    }
+    
+    if (typeof Blob !== 'undefined' && data instanceof Blob) {
+      data = Buffer.from(await data.arrayBuffer())
     }
 
     if (receiver) {
