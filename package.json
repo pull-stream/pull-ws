@@ -1,6 +1,6 @@
 {
   "name": "it-ws",
-  "version": "3.0.2",
+  "version": "4.0.0",
   "description": "Simple async iterables for websocket client connections",
   "main": "index.js",
   "scripts": {
