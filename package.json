@@ -1,6 +1,6 @@
 {
   "name": "it-ws",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "description": "Simple async iterables for websocket client connections",
   "author": "Alan Shaw",
   "license": "Apache-2.0 OR MIT",
