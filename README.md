@@ -1,10 +1,10 @@
 # it-ws
 
-[![Build Status](https://img.shields.io/travis/alanshaw/it-ws.svg?branch=master)](https://travis-ci.org/alanshaw/it-ws)
+[![Build Status](https://github.com/alanshaw/it-ws/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/alanshaw/it-ws/actions/workflows/main.yml)
 [![dependencies Status](https://david-dm.org/alanshaw/it-ws/status.svg)](https://david-dm.org/alanshaw/it-ws)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
-> Use websockets via async iterables, both client and server.
+> Use websockets via async iterables, both client and server
 
 ## Install
 
@@ -17,8 +17,8 @@ npm i it-ws
 ### Example - client
 
 ```js
-const connect = require('it-ws/client') // OR: require('it-ws').connect
-const pipe = require('it-pipe')
+import { connect } from 'it-ws/client'
+import { pipe } from 'it-pipe'
 
 const stream = connect(WS_URL)
 
@@ -30,8 +30,8 @@ pipe(source, stream, sink)
 ### Example - server
 
 ```js
-const createServer = require('it-ws/server')
-const pipe = require('it-pipe')
+import { createServer } from 'it-ws/server'
+import { pipe } from 'it-pipe'
 
 const server = createServer(stream => {
   //pipe the stream somewhere.
@@ -44,13 +44,13 @@ await server.listen(PORT)
 
 ## API
 
-### `connect = require('it-ws/client')`
+### `import { connect } from 'it-ws/client'`
 
 `connect(url, { binary: boolean })`
 
 Create a websocket client connection. Set `binary: true` to get a stream of arrayBuffers (on the browser). Defaults to true on node, but to strings on the browser. This may cause a problems if your application assumes binary.
 
-For adding options to the Websocket instance, as [websockets/ws/blob/master/doc/ws.md#new-websocketaddress-protocols-options](https://github.com/websockets/ws/blob/master/doc/ws.md#new-websocketaddress-protocols-options), you can provide an object with the `websocket` property into the connect options.
+For adding options to the WebSocket instance, as [websockets/ws/blob/master/doc/ws.md#new-websocketaddress-protocols-options](https://github.com/websockets/ws/blob/master/doc/ws.md#new-websocketaddress-protocols-options), you can provide an object with the `websocket` property into the connect options.
 
 ```js
 const stream = connect(url)
@@ -59,7 +59,7 @@ const stream = connect(url)
 // https://gist.github.com/alanshaw/591dc7dd54e4f99338a347ef568d6ee9#duplex-it
 ```
 
-### `createServer = require('it-ws/server')`
+### `import { createServer } from 'it-ws/server'`
 
 Create async iterable websocket servers.
 
@@ -69,50 +69,53 @@ Create async iterable websocket servers.
 
 `onConnection(stream)` is called every time a connection is received.
 
-# TODO convert the following docs:
-
----
-
 #### Example
 
 One duplex service you may want to use this with is [muxrpc](https://github.com/dominictarr/muxrpc)
 
 ``` js
-var ws = require('pull-ws')
-var pull = require('pull-stream')
+import { createServer } from 'it-ws/server'
+import { connect } from 'it-ws/client'
+import { pipe } from 'it-pipe'
 
-ws.createServer(function (stream) {
-  //pipe duplex style to your service.
-  pull(stream, service.createStream(), stream)
+createServer({
+  onConnection: (stream) => {
+    // pipe duplex style to your service
+    pipe(stream, service.createStream(), stream)
+  }
 })
 .listen(9999)
 
-var stream = ws.connect('ws://localhost:9999')
+const stream = client.createStream()
 
-pull(stream, client.createStream(), stream)
+await pipe(
+  stream,
+  connect('ws://localhost:9999'),
+  stream
+)
 ```
 
-if the connection fails, the first read from the stream will be an error,
-otherwise, to get a handle of stream end/error pass a callback to connect.
+if the connection fails, the stream will throw
 
 ``` js
-ws.connect('ws://localhost:9999', function (err, stream) {
-  if(err) return handleError(err)
-  //stream is now ready
-})
-
+try {
+  await pipe(
+    stream,
+    connect('ws://localhost:9999'),
+    stream
+  )
+} catch (err) {
+  // handle err
+}
 ```
 
 To run the server over TLS:
 
 ```js
-var tlsOpts = {
+createServer({
   key: fs.readFileSync('test/fixtures/keys/agent2-key.pem'),
   cert: fs.readFileSync('test/fixtures/keys/agent2-cert.pem')
-};
-ws.createServer(tlsOpts, function (stream) {
-  //pipe duplex style to your service.
-  pull(stream, service.createStream(), stream)
+  // other options
 })
 .listen(9999)
 ```
@@ -124,7 +127,10 @@ To add client-authentication to the server, you can set `verifyClient`.
 function verifyClient (info) {
   return info.secure == true
 }
-ws.createServer({ verifyClient: verifyClient }, onStream)
+createServer({
+  verifyClient: verifyClient
+  // other options
+})
 ```
 
 ## use with an http server
@@ -133,10 +139,14 @@ if you have an http server that you also need to serve stuff
 over, and want to use a single port, use the `server` option.
 
 ``` js
-var http = require('http')
-var server = http.createServer(function(req, res){...}).listen(....)
-ws.createServer({server: server}, function (stream) { ... })
+import http from 'http'
 
+const server = http.createServer(function(req, res){...}).listen(....)
+
+createServer({
+  server: server
+  // other options
+})
 ```
 
 ### core, websocket wrapping functions
@@ -145,29 +155,29 @@ these modules are used internally, to wrap a websocket.
 you probably won't need to touch these,
 but they are documented anyway.
 
-### `require('pull-ws/duplex')(socket, opts?)`
+### `import duplex from 'it-ws/duplex'`
 
-turn a websocket into a duplex pull stream.
-If provided, `opts` is passed to `pws.sink(socket, opts)`.
+turn a websocket into a duplex stream.
+If provided, `opts` is passed to `sink(socket, opts)`.
 
-Websockets do not support half open mode.
+WebSockets do not support half open mode.
 [see allowHalfOpen option in net module](
 http://nodejs.org/api/net.html#net_net_createserver_options_connectionlistener)
 
 If you have a protocol that assumes halfOpen connections, but are using
 a networking protocol like websockets that does not support it, I suggest
-using [pull-goodbye](https://github.com/dominictarr/pull-goodbye) with your
+using [it-goodbye](https://github.com/alanshaw/it-goodbye) with your
 protocol.
 
 The duplex stream will also contain a copy of the properties from
 the http request that became the websocket. they are `method`, `url`,
 `headers` and `upgrade`.
 
-also exposed at: `var duplex = require('pull-ws')`
+also exposed at: `import { duplex } from 'it-ws'`
 
-### `require('pull-ws/sink')(socket, opts?)`
+### `import sink from 'it-ws/sink'`
 
-Create a pull-stream `Sink` that will write data to the `socket`.
+Create a `Sink` that will write data to the `socket`.
 `opts` may be `{closeOnEnd: true, onClose: onClose}`.
 `onClose` will be called when the sink ends. If `closeOnEnd=false`
 the stream will not close, it will just stop emitting data.
@@ -176,53 +186,55 @@ the stream will not close, it will just stop emitting data.
 If `opts` is a function, then `onClose = opts; opts.closeOnEnd = true`.
 
 ```js
-var pull = require('pull-stream');
-var wsSink = require('pull-ws');
+import sink from 'it-ws/sink'
+import { pipe } from 'it-pipe'
+import each from 'it-foreach'
+import delay from 'delay'
 
 // connect to the echo endpoint for test/server.js
-var socket = new WebSocket('wss://echo.websocket.org');
+var socket = new WebSocket('wss://echo.websocket.org')
 
 // write values to the socket
-pull(
-  pull.infinite(function() {
-    return 'hello @ ' + Date.now()
-  }),
+pipe(
+  async function * () {
+    while (true) {
+      yield 'hello @ ' + Date.now()
+    }
+  }(),
   // throttle so it doesn't go nuts
-  pull.asyncMap(function(value, cb) {
-    setTimeout(function() {
-      cb(null, value);
-    }, 100);
-  }),
-  wsSink(socket)
+  (source) => each(source, () => delay(100))
+  sink(socket)
 );
 
 socket.addEventListener('message', function(evt) {
   console.log('received: ' + evt.data);
 });
-
 ```
 
-also exposed at `require('pull-ws').sink`
+also exposed at `import { sink } from 'it-ws'`
 
-### `require('pull-ws/source')(socket)`
+### `import source from 'it-ws/source'`
 
-Create a pull-stream `Source` that will read data from the `socket`.
+Create a `Source` that will read data from the `socket`.
 
 ```js
-var pull = require('pull-stream');
+import { pipe } from 'it-pipe'
+import source from 'it-ws/source'
+import { toString } from 'uint8arrays/to-string'
 
-// we just need the source, so cherrypick
-var wsSource = require('pull-ws/source');
-
-pull(
+pipe(
   // connect to the test/server.js endpoint
-  wsSource(new WebSocket('ws://localhost:3000/read')),
-  pull.log()
+  source(new WebSocket('ws://localhost:3000/read')),
+  async (source) => {
+    for await (const buf of source) {
+      console.info(toString(buf))
+    }
+  }
 );
 
 ```
 
-also exposed at `require('pull-ws').source`
+also exposed at `import { source } from 'it-ws'`
 
 ## License
 
