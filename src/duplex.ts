@@ -44,10 +44,16 @@ export default (socket: WebSocket, options?: DuplexWebSocketOptions): DuplexWebS
     sink: sink(socket, options),
     source: connectedSource,
     connected: async () => await connectedSource.connected(),
-    close: async () => await new Promise<void>((resolve) => {
-      socket.addEventListener('close', () => resolve())
-      socket.close()
-    }),
+    close: async () => {
+      if (socket.readyState === socket.CONNECTING || socket.readyState === socket.OPEN) {
+        await new Promise<void>((resolve) => {
+          socket.addEventListener('close', () => {
+            resolve()
+          })
+          socket.close()
+        })
+      }
+    },
     destroy: () => {
       if (socket.terminate != null) {
         socket.terminate()
