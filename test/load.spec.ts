@@ -14,9 +14,9 @@ describe('load', () => {
     // const start = Date.now()
 
     const server = await WS.createServer({
-      onConnection: async function (stream) {
+      onConnection: function (stream) {
         let N = 0
-        await pipe(
+        void pipe(
           stream.source,
           (source) => each(source, val => {
             if (N % 1000 === 0) {
@@ -25,9 +25,10 @@ describe('load', () => {
             N++
           }),
           drain
-        )
+        ).then(async () => {
+          await server.close()
+        })
         // console.log(N, N / ((Date.now() - start) / 1000)) // eslint-disable-line no-console
-        await server.close()
       }
     }).listen(2134)
 

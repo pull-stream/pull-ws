@@ -1,4 +1,4 @@
-import { expect } from 'aegir/utils/chai.js'
+import { expect } from 'aegir/chai'
 import * as WS from '../src/index.js'
 import ndjson from 'it-ndjson'
 import { pipe } from 'it-pipe'
@@ -16,8 +16,8 @@ describe('simple echo server', () => {
 
   it('echoes', async () => {
     const server = WS.createServer({
-      onConnection: async stream => {
-        await pipe(stream, stream)
+      onConnection: stream => {
+        void pipe(stream, stream)
       }
     })
 

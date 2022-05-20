@@ -1,4 +1,4 @@
-import { expect } from 'aegir/utils/chai.js'
+import { expect } from 'aegir/chai'
 import { isNode, isElectronMain } from 'wherearewe'
 import * as WS from '../src/index.js'
 

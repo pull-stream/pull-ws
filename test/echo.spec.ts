@@ -1,4 +1,4 @@
-import { expect } from 'aegir/utils/chai.js'
+import { expect } from 'aegir/chai'
 import WebSocket from '../src/web-socket.js'
 import * as WS from '../src/index.js'
 import { pipe } from 'it-pipe'

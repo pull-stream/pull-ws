@@ -83,12 +83,12 @@ export function createServer (opts?: ServerOptions): WebSocketServer {
     const addr = wsServer.address()
 
     if (typeof addr === 'string') {
-      wsServer.emit('error', new Error('Cannot listen on unix sockets'))
+      wss.emit('error', new Error('Cannot listen on unix sockets'))
       return
     }
 
     if (req.socket.remoteAddress == null || req.socket.remotePort == null) {
-      wsServer.emit('error', new Error('Remote connection did not have address and/or port'))
+      wss.emit('error', new Error('Remote connection did not have address and/or port'))
       return
     }
 

@@ -1,4 +1,4 @@
-import { expect } from 'aegir/utils/chai.js'
+import { expect } from 'aegir/chai'
 import wsurl from '../src/ws-url.js'
 
 describe('ws-url', () => {
