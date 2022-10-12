@@ -49,22 +49,28 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/src/index.d.ts",
       "import": "./dist/src/index.js"
     },
     "./client": {
+      "types": "./dist/src/client.d.ts",
       "import": "./dist/src/client.js"
     },
     "./duplex": {
+      "types": "./dist/src/duplex.d.ts",
       "import": "./dist/src/duplex.js"
     },
     "./server": {
+      "types": "./dist/src/server.d.ts",
       "browser": "./dist/src/server.browser.js",
       "import": "./dist/src/server.js"
     },
     "./sink": {
+      "types": "./dist/src/sink.d.ts",
       "import": "./dist/src/sink.js"
     },
     "./source": {
+      "types": "./dist/src/source.d.ts",
       "import": "./dist/src/source.js"
     }
   },
@@ -101,15 +107,15 @@
               "release": "patch"
             },
             {
-              "type": "chore",
-              "release": "patch"
-            },
-            {
               "type": "docs",
               "release": "patch"
             },
             {
               "type": "test",
+              "release": "patch"
+            },
+            {
+              "type": "deps",
               "release": "patch"
             },
             {
@@ -139,7 +145,11 @@
               },
               {
                 "type": "docs",
-                "section": "Trivial Changes"
+                "section": "Documentation"
+              },
+              {
+                "type": "deps",
+                "section": "Dependencies"
               },
               {
                 "type": "test",

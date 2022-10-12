@@ -1,15 +1,32 @@
-# it-ws
+# it-ws <!-- omit in toc -->
 
-[![Build Status](https://github.com/alanshaw/it-ws/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/alanshaw/it-ws/actions/workflows/main.yml)
-[![dependencies Status](https://david-dm.org/alanshaw/it-ws/status.svg)](https://david-dm.org/alanshaw/it-ws)
-[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![codecov](https://img.shields.io/codecov/c/github/alanshaw/it-ws.svg?style=flat-square)](https://codecov.io/gh/alanshaw/it-ws)
+[![CI](https://img.shields.io/github/workflow/status/alanshaw/it-ws/test%20&%20maybe%20release/master?style=flat-square)](https://github.com/alanshaw/it-ws/actions/workflows/js-test-and-release.yml)
 
-> Use websockets via async iterables, both client and server
+> Simple async iterables for websocket client connections
+
+## Table of contents <!-- omit in toc -->
+
+- [Install](#install)
+- [Usage](#usage)
+  - [Example - client](#example---client)
+  - [Example - server](#example---server)
+- [API](#api)
+  - [`import { connect } from 'it-ws/client'`](#import--connect--from-it-wsclient)
+  - [`import { createServer } from 'it-ws/server'`](#import--createserver--from-it-wsserver)
+    - [Example](#example)
+- [use with an http server](#use-with-an-http-server)
+  - [core, websocket wrapping functions](#core-websocket-wrapping-functions)
+  - [`import duplex from 'it-ws/duplex'`](#import-duplex-from-it-wsduplex)
+  - [`import sink from 'it-ws/sink'`](#import-sink-from-it-wssink)
+  - [`import source from 'it-ws/source'`](#import-source-from-it-wssource)
+- [License](#license)
+- [Contribute](#contribute)
 
 ## Install
 
-```sh
-npm i it-ws
+```console
+$ npm i it-ws
 ```
 
 ## Usage
@@ -73,7 +90,7 @@ Create async iterable websocket servers.
 
 One duplex service you may want to use this with is [muxrpc](https://github.com/dominictarr/muxrpc)
 
-``` js
+```js
 import { createServer } from 'it-ws/server'
 import { connect } from 'it-ws/client'
 import { pipe } from 'it-pipe'
@@ -97,7 +114,7 @@ await pipe(
 
 if the connection fails, the stream will throw
 
-``` js
+```js
 try {
   await pipe(
     stream,
@@ -138,7 +155,7 @@ createServer({
 if you have an http server that you also need to serve stuff
 over, and want to use a single port, use the `server` option.
 
-``` js
+```js
 import http from 'http'
 
 const server = http.createServer(function(req, res){...}).listen(....)
@@ -161,8 +178,7 @@ turn a websocket into a duplex stream.
 If provided, `opts` is passed to `sink(socket, opts)`.
 
 WebSockets do not support half open mode.
-[see allowHalfOpen option in net module](
-http://nodejs.org/api/net.html#net_net_createserver_options_connectionlistener)
+[see allowHalfOpen option in net module](http://nodejs.org/api/net.html#net_net_createserver_options_connectionlistener)
 
 If you have a protocol that assumes halfOpen connections, but are using
 a networking protocol like websockets that does not support it, I suggest
@@ -238,4 +254,11 @@ also exposed at `import { source } from 'it-ws'`
 
 ## License
 
-MIT
+Licensed under either of
+
+- Apache 2.0, ([LICENSE-APACHE](LICENSE-APACHE) / <http://www.apache.org/licenses/LICENSE-2.0>)
+- MIT ([LICENSE-MIT](LICENSE-MIT) / <http://opensource.org/licenses/MIT>)
+
+## Contribute
+
+Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any additional terms or conditions.
