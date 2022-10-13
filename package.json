@@ -182,7 +182,7 @@
     "event-iterator": "^2.0.0",
     "iso-url": "^1.1.2",
     "it-stream-types": "^1.0.2",
-    "uint8arrays": "^3.0.0",
+    "uint8arrays": "^4.0.2",
     "ws": "^8.4.0"
   },
   "devDependencies": {
