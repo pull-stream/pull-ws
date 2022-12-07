@@ -1,3 +1,10 @@
+## [5.0.5](https://github.com/alanshaw/it-ws/compare/v5.0.4...v5.0.5) (2022-12-07)
+
+
+### Dependencies
+
+* update it-drain, it-ndjson and it-foreach ([#35](https://github.com/alanshaw/it-ws/issues/35)) ([5c65441](https://github.com/alanshaw/it-ws/commit/5c65441e2cd718b5338d9bc570091d4897e1e5e1))
+
 ## [5.0.4](https://github.com/alanshaw/it-ws/compare/v5.0.3...v5.0.4) (2022-12-07)
 
 
