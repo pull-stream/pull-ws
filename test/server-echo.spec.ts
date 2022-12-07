@@ -1,6 +1,6 @@
 import { expect } from 'aegir/chai'
 import * as WS from '../src/index.js'
-import ndjson from 'it-ndjson'
+import * as ndjson from 'it-ndjson'
 import { pipe } from 'it-pipe'
 import map from 'it-map'
 import all from 'it-all'
