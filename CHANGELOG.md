@@ -1,3 +1,11 @@
+## [5.0.4](https://github.com/alanshaw/it-ws/compare/v5.0.3...v5.0.4) (2022-12-07)
+
+
+### Dependencies
+
+* **dev:** bump it-all from 1.0.6 to 2.0.0 ([#27](https://github.com/alanshaw/it-ws/issues/27)) ([003752d](https://github.com/alanshaw/it-ws/commit/003752de90da52d27624f16d4d7f06d48f217539))
+* **dev:** bump it-map from 1.0.6 to 2.0.0 ([#28](https://github.com/alanshaw/it-ws/issues/28)) ([8cde19c](https://github.com/alanshaw/it-ws/commit/8cde19c59342c39d325c80dc5c54fae469065d4a))
+
 ## [5.0.3](https://github.com/alanshaw/it-ws/compare/v5.0.2...v5.0.3) (2022-10-13)
 
 
