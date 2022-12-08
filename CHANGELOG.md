@@ -1,3 +1,10 @@
+## [5.0.6](https://github.com/alanshaw/it-ws/compare/v5.0.5...v5.0.6) (2022-12-08)
+
+
+### Bug Fixes
+
+* catch listen error ([#34](https://github.com/alanshaw/it-ws/issues/34)) ([7a96e45](https://github.com/alanshaw/it-ws/commit/7a96e45ff0c15c51c8901c491e318b44e38226cf))
+
 ## [5.0.5](https://github.com/alanshaw/it-ws/compare/v5.0.4...v5.0.5) (2022-12-07)
 
 
