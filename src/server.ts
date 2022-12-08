@@ -22,16 +22,24 @@ export interface WebSocketServer extends EventEmitter {
 
 class Server extends EventEmitter {
   private readonly server: http.Server | https.Server
+  private readonly wsServer: WSServer
 
-  constructor (server: http.Server | https.Server) {
+  constructor (server: http.Server | https.Server, opts?: ServerOptions) {
     super()
-
+    opts = opts ?? {}
     this.server = server
+    this.wsServer = new WSServer({
+      server: server,
+      perMessageDeflate: false,
+      verifyClient: opts.verifyClient
+    })
+    this.wsServer.on('connection', this.onWsServerConnection.bind(this))
   }
 
   async listen (addrInfo: { port: number } | number) {
-    return await new Promise<WebSocketServer>(resolve => {
-      this.once('listening', () => resolve(this))
+    return await new Promise<WebSocketServer>((resolve, reject) => {
+      this.wsServer.once('error', (e) => reject(e))
+      this.wsServer.once('listening', () => resolve(this))
       this.server.listen(typeof addrInfo === 'number' ? addrInfo : addrInfo.port)
     })
   }
@@ -51,6 +59,31 @@ class Server extends EventEmitter {
   address () {
     return this.server.address()
   }
+
+  onWsServerConnection (socket: WebSocket, req: http.IncomingMessage) {
+    const addr = this.wsServer.address()
+
+    if (typeof addr === 'string') {
+      this.emit('error', new Error('Cannot listen on unix sockets'))
+      return
+    }
+
+    if (req.socket.remoteAddress == null || req.socket.remotePort == null) {
+      this.emit('error', new Error('Remote connection did not have address and/or port'))
+      return
+    }
+
+    const stream: DuplexWebSocket = {
+      ...duplex(socket, {
+        remoteAddress: req.socket.remoteAddress,
+        remotePort: req.socket.remotePort
+      }),
+      localAddress: addr.address,
+      localPort: addr.port
+    }
+
+    this.emit('connection', stream, req)
+  }
 }
 
 export function createServer (opts?: ServerOptions): WebSocketServer {
@@ -69,40 +102,9 @@ export function createServer (opts?: ServerOptions): WebSocketServer {
     })
   }
 
-  const wsServer = new WSServer({
-    server: server,
-    perMessageDeflate: false,
-    verifyClient: opts.verifyClient
-  })
-
   proxy(server, 'listening')
   proxy(server, 'request')
   proxy(server, 'close')
-
-  wsServer.on('connection', function (socket: WebSocket, req: http.IncomingMessage) {
-    const addr = wsServer.address()
-
-    if (typeof addr === 'string') {
-      wss.emit('error', new Error('Cannot listen on unix sockets'))
-      return
-    }
-
-    if (req.socket.remoteAddress == null || req.socket.remotePort == null) {
-      wss.emit('error', new Error('Remote connection did not have address and/or port'))
-      return
-    }
-
-    const stream: DuplexWebSocket = {
-      ...duplex(socket, {
-        remoteAddress: req.socket.remoteAddress,
-        remotePort: req.socket.remotePort
-      }),
-      localAddress: addr.address,
-      localPort: addr.port
-    }
-
-    wss.emit('connection', stream, req)
-  })
 
   return wss
 }

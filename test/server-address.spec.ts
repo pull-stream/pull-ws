@@ -14,4 +14,12 @@ describe('address', () => {
     expect(server.address()).to.have.property('port', 55214, 'return address should match')
     await server.close()
   })
+
+  it('server listen error should be catchable', async () => {
+    const server1 = WS.createServer()
+    await server1.listen(55215)
+    const server2 = WS.createServer()
+    await expect(server2.listen(55215)).to.be.eventually.rejectedWith('listen EADDRINUSE')
+    await server1.close()
+  })
 })
