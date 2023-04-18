@@ -203,7 +203,7 @@
   },
   "browser": {
     "./dist/src/web-socket.js": "./dist/src/web-socket.browser.js",
-    "./server": false,
+    "./dist/src/server.js": false,
     "ws": false,
     "http": false,
     "https": false
