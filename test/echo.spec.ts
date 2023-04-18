@@ -78,13 +78,15 @@ describe('echo', () => {
       pws,
       goodbye({
         source: expected,
-        sink: async source => await pipe(
-          source,
-          (source) => each(source, (value) => {
-            expect(value).to.equalBytes(expected.shift())
-          }),
-          drain
-        )
+        sink: async source => {
+          await pipe(
+            source,
+            (source) => each(source, (value) => {
+              expect(value).to.equalBytes(expected.shift())
+            }),
+            drain
+          )
+        }
       }),
       pws
     )
