@@ -1,3 +1,19 @@
+## [6.0.0](https://github.com/alanshaw/it-ws/compare/v5.0.6...v6.0.0) (2023-04-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* the type of the source/sink properties have changed
+
+### Bug Fixes
+
+* fix ci script ([af5c774](https://github.com/alanshaw/it-ws/commit/af5c7745f68912debcf04bb6a7214fac1b9834b5))
+
+
+### Dependencies
+
+* update stream types ([#61](https://github.com/alanshaw/it-ws/issues/61)) ([4b4ad84](https://github.com/alanshaw/it-ws/commit/4b4ad845f1e0615ff2cff603676c87578046bffe))
+
 ## [5.0.6](https://github.com/alanshaw/it-ws/compare/v5.0.5...v5.0.6) (2022-12-08)
 
 
