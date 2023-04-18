@@ -1,13 +1,14 @@
 # it-ws <!-- omit in toc -->
 
 [![codecov](https://img.shields.io/codecov/c/github/alanshaw/it-ws.svg?style=flat-square)](https://codecov.io/gh/alanshaw/it-ws)
-[![CI](https://img.shields.io/github/workflow/status/alanshaw/it-ws/test%20&%20maybe%20release/master?style=flat-square)](https://github.com/alanshaw/it-ws/actions/workflows/js-test-and-release.yml)
+[![CI](https://img.shields.io/github/actions/workflow/status/alanshaw/it-ws/js-test-and-release.yml?branch=master\&style=flat-square)](https://github.com/alanshaw/it-ws/actions/workflows/js-test-and-release.yml?query=branch%3Amaster)
 
 > Simple async iterables for websocket client connections
 
 ## Table of contents <!-- omit in toc -->
 
 - [Install](#install)
+  - [Browser `<script>` tag](#browser-script-tag)
 - [Usage](#usage)
   - [Example - client](#example---client)
   - [Example - server](#example---server)
@@ -21,12 +22,20 @@
   - [`import sink from 'it-ws/sink'`](#import-sink-from-it-wssink)
   - [`import source from 'it-ws/source'`](#import-source-from-it-wssource)
 - [License](#license)
-- [Contribute](#contribute)
+- [Contribution](#contribution)
 
 ## Install
 
 ```console
 $ npm i it-ws
+```
+
+### Browser `<script>` tag
+
+Loading this module through a script tag will make it's exports available as `ItWs` in the global namespace.
+
+```html
+<script src="https://unpkg.com/it-ws/dist/index.min.js"></script>
 ```
 
 ## Usage
@@ -259,6 +268,6 @@ Licensed under either of
 - Apache 2.0, ([LICENSE-APACHE](LICENSE-APACHE) / <http://www.apache.org/licenses/LICENSE-2.0>)
 - MIT ([LICENSE-MIT](LICENSE-MIT) / <http://opensource.org/licenses/MIT>)
 
-## Contribute
+## Contribution
 
 Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any additional terms or conditions.

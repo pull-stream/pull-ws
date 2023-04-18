@@ -1,16 +1,16 @@
 import ready from './ready.js'
 import type { WebSocket } from 'ws'
-import type { Sink } from 'it-stream-types'
+import type { Sink, Source } from 'it-stream-types'
 
 export interface SinkOptions {
   closeOnEnd?: boolean
 }
 
-export default (socket: WebSocket, options: SinkOptions) => {
+export default (socket: WebSocket, options: SinkOptions): Sink<Source<Uint8Array>, Promise<void>> => {
   options = options ?? {}
   options.closeOnEnd = options.closeOnEnd !== false
 
-  const sink: Sink<Uint8Array, Promise<void>> = async source => {
+  const sink: Sink<Source<Uint8Array>, Promise<void>> = async source => {
     for await (const data of source) {
       try {
         await ready(socket)
@@ -23,7 +23,7 @@ export default (socket: WebSocket, options: SinkOptions) => {
     }
 
     if (options.closeOnEnd != null && socket.readyState <= 1) {
-      return await new Promise((resolve, reject) => {
+      await new Promise<void>((resolve, reject) => {
         socket.addEventListener('close', event => {
           if (event.wasClean || event.code === 1006) {
             resolve()
@@ -33,7 +33,7 @@ export default (socket: WebSocket, options: SinkOptions) => {
           }
         })
 
-        setTimeout(() => socket.close())
+        setTimeout(() => { socket.close() })
       })
     }
   }

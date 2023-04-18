@@ -3,7 +3,7 @@ import type { WebSocket } from 'ws'
 
 const port = parseInt(process.env.PORT ?? '3000', 10)
 
-export function createTestServer () {
+export function createTestServer (): WebSocketServer {
   const routes: Record<string, (ws: WebSocket) => void> = {
     '/read': function (ws: WebSocket) {
       const values = ['a', 'b', 'c', 'd']
@@ -24,7 +24,7 @@ export function createTestServer () {
       })
     }
   }
-  const wss = new WebSocketServer({ port: port })
+  const wss = new WebSocketServer({ port })
 
   wss.on('connection', function (ws, req) {
     if (req.url == null) {

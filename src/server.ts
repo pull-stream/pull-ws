@@ -29,26 +29,26 @@ class Server extends EventEmitter {
     opts = opts ?? {}
     this.server = server
     this.wsServer = new WSServer({
-      server: server,
+      server,
       perMessageDeflate: false,
       verifyClient: opts.verifyClient
     })
     this.wsServer.on('connection', this.onWsServerConnection.bind(this))
   }
 
-  async listen (addrInfo: { port: number } | number) {
+  async listen (addrInfo: { port: number } | number): Promise<WebSocketServer> {
     return await new Promise<WebSocketServer>((resolve, reject) => {
-      this.wsServer.once('error', (e) => reject(e))
-      this.wsServer.once('listening', () => resolve(this))
+      this.wsServer.once('error', (e) => { reject(e) })
+      this.wsServer.once('listening', () => { resolve(this) })
       this.server.listen(typeof addrInfo === 'number' ? addrInfo : addrInfo.port)
     })
   }
 
-  async close () {
-    return await new Promise<void>((resolve, reject) => {
+  async close (): Promise<void> {
+    await new Promise<void>((resolve, reject) => {
       this.server.close((err) => {
         if (err != null) {
-          return reject(err)
+          reject(err); return
         }
 
         resolve()
@@ -56,11 +56,11 @@ class Server extends EventEmitter {
     })
   }
 
-  address () {
+  address (): string | AddressInfo | null {
     return this.server.address()
   }
 
-  onWsServerConnection (socket: WebSocket, req: http.IncomingMessage) {
+  onWsServerConnection (socket: WebSocket, req: http.IncomingMessage): void {
     const addr = this.wsServer.address()
 
     if (typeof addr === 'string') {
@@ -96,7 +96,7 @@ export function createServer (opts?: ServerOptions): WebSocketServer {
     wss.on('connection', opts.onConnection)
   }
 
-  function proxy (server: http.Server, event: string) {
+  function proxy (server: http.Server, event: string): http.Server {
     return server.on(event, (...args: any[]) => {
       wss.emit(event, ...args)
     })

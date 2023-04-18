@@ -43,7 +43,7 @@
   },
   "files": [
     "src",
-    "dist/src",
+    "dist",
     "!dist/test",
     "!**/*.tsbuildinfo"
   ],
@@ -176,26 +176,27 @@
     "test:firefox-webworker": "aegir test -t webworker -- --browser firefox",
     "test:node": "aegir test -t node --cov",
     "test:electron-main": "aegir test -t electron-main",
-    "release": "aegir release"
+    "release": "aegir release",
+    "docs": "aegir docs"
   },
   "dependencies": {
     "event-iterator": "^2.0.0",
     "iso-url": "^1.1.2",
-    "it-stream-types": "^1.0.2",
+    "it-stream-types": "^2.0.1",
     "uint8arrays": "^4.0.2",
     "ws": "^8.4.0"
   },
   "devDependencies": {
     "@types/ws": "^8.2.2",
-    "aegir": "^37.0.15",
+    "aegir": "^38.1.8",
     "delay": "^5.0.0",
-    "it-all": "^2.0.0",
-    "it-drain": "^2.0.0",
-    "it-foreach": "^1.0.0",
+    "it-all": "^3.0.1",
+    "it-drain": "^3.0.1",
+    "it-foreach": "^2.0.2",
     "it-goodbye": "^4.0.0",
-    "it-map": "^2.0.0",
+    "it-map": "^3.0.2",
     "it-ndjson": "^1.0.0",
-    "it-pipe": "^2.0.3",
+    "it-pipe": "^3.0.1",
     "p-defer": "^4.0.0",
     "wherearewe": "^2.0.1",
     "wsurl": "^1.0.0"

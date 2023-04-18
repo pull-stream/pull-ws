@@ -2,9 +2,9 @@ import source from './source.js'
 import sink from './sink.js'
 import type WebSocket from './web-socket.js'
 import type { SinkOptions } from './sink.js'
-import type { Duplex } from 'it-stream-types'
+import type { Duplex, Source } from 'it-stream-types'
 
-export interface DuplexWebSocket extends Duplex<Uint8Array, Uint8Array, Promise<void>> {
+export interface DuplexWebSocket extends Duplex<AsyncGenerator<Uint8Array>, Source<Uint8Array>, Promise<void>> {
   connected: () => Promise<void>
   localAddress?: string
   localPort?: number
@@ -43,7 +43,7 @@ export default (socket: WebSocket, options?: DuplexWebSocketOptions): DuplexWebS
   const duplex: DuplexWebSocket = {
     sink: sink(socket, options),
     source: connectedSource,
-    connected: async () => await connectedSource.connected(),
+    connected: async () => { await connectedSource.connected() },
     close: async () => {
       if (socket.readyState === socket.CONNECTING || socket.readyState === socket.OPEN) {
         await new Promise<void>((resolve) => {

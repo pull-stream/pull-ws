@@ -40,7 +40,7 @@ describe('simple echo server', () => {
       [1, 2, 3],
       // need a delay, because otherwise ws hangs up wrong.
       // otherwise use pull-goodbye.
-      (source) => map(source, async val => await new Promise(resolve => setTimeout(() => resolve(val), 10))),
+      (source) => map(source, async val => await new Promise(resolve => setTimeout(() => { resolve(val) }, 10))),
       (source) => map(ndjson.stringify(source), str => uint8ArrayFromString(str)),
       stream,
       ndjson.parse,

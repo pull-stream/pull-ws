@@ -29,7 +29,7 @@ describe('simple echo server', () => {
       [1, 2, 3],
       // need a delay, because otherwise ws hangs up wrong.
       // otherwise use pull-goodbye.
-      (source) => each(source, async () => await delay(10)),
+      (source) => each(source, async () => { await delay(10) }),
       (source) => map(ndjson.stringify(source), str => uint8ArrayFromString(str)),
       stream,
       ndjson.parse,

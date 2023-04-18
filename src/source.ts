@@ -10,40 +10,42 @@ function isArrayBuffer (obj: any): obj is ArrayBuffer {
     (obj?.constructor?.name === 'ArrayBuffer' && typeof obj?.byteLength === 'number')
 }
 
-export interface ConnectedSource extends AsyncIterable<Uint8Array> {
+export interface ConnectedSource extends AsyncGenerator<Uint8Array> {
   connected: () => Promise<void>
 }
 
 export default (socket: WebSocket): ConnectedSource => {
   socket.binaryType = 'arraybuffer'
 
-  const connected = async () => await new Promise<void>((resolve, reject) => {
-    if (isConnected) {
-      return resolve()
-    }
-    if (connError != null) {
-      return reject(connError)
-    }
+  const connected = async (): Promise<void> => {
+    await new Promise<void>((resolve, reject) => {
+      if (isConnected) {
+        resolve(); return
+      }
+      if (connError != null) {
+        reject(connError); return
+      }
 
-    const cleanUp = (cont: () => void) => {
-      socket.removeEventListener('open', onOpen)
-      socket.removeEventListener('error', onError)
-      cont()
-    }
+      const cleanUp = (cont: () => void): void => {
+        socket.removeEventListener('open', onOpen)
+        socket.removeEventListener('error', onError)
+        cont()
+      }
 
-    const onOpen = () => cleanUp(resolve)
-    const onError = (event: ErrorEvent) => {
-      cleanUp(() => reject(event.error ?? new Error(`connect ECONNREFUSED ${socket.url}`)))
-    }
+      const onOpen = (): void => { cleanUp(resolve) }
+      const onError = (event: ErrorEvent): void => {
+        cleanUp(() => { reject(event.error ?? new Error(`connect ECONNREFUSED ${socket.url}`)) })
+      }
 
-    socket.addEventListener('open', onOpen)
-    socket.addEventListener('error', onError)
-  })
+      socket.addEventListener('open', onOpen)
+      socket.addEventListener('error', onError)
+    })
+  }
 
   const source = (async function * () {
     const messages = new EventIterator<Uint8Array>(
       ({ push, stop, fail }) => {
-        const onMessage = (event: MessageEvent) => {
+        const onMessage = (event: MessageEvent): void => {
           let data: Uint8Array | null = null
 
           if (typeof event.data === 'string') {
@@ -64,7 +66,7 @@ export default (socket: WebSocket): ConnectedSource => {
 
           push(data)
         }
-        const onError = (event: ErrorEvent) => fail(event.error ?? new Error('Socket error'))
+        const onError = (event: ErrorEvent): void => { fail(event.error ?? new Error('Socket error')) }
 
         socket.addEventListener('message', onMessage)
         socket.addEventListener('error', onError)
